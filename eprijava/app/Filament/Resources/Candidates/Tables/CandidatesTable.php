@@ -1,0 +1,54 @@
+<?php
+
+namespace App\Filament\Resources\Candidates\Tables;
+
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+
+class CandidatesTable
+{
+    public static function configure(Table $table): Table
+    {
+        return $table
+            ->columns([
+                TextColumn::make('last_name')
+                    ->label('Презиме')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('first_name')
+                    ->label('Име')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('national_id')
+                    ->label('ЈМБГ')
+                    ->searchable(),
+                TextColumn::make('email')
+                    ->label('Е-пошта')
+                    ->searchable(),
+                TextColumn::make('phone')
+                    ->label('Телефон'),
+                TextColumn::make('address_city')
+                    ->label('Место')
+                    ->searchable(),
+                TextColumn::make('created_at')
+                    ->label('Креиран')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([])
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
+            ])
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
+}
