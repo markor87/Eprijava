@@ -46,6 +46,11 @@ class User extends Authenticatable
         return $this->hasMany(ForeignLanguageSkill::class);
     }
 
+    public function computerSkill(): HasOne
+    {
+        return $this->hasOne(ComputerSkill::class);
+    }
+
     /**
      * The attributes that are mass assignable.
      *

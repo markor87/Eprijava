@@ -312,7 +312,61 @@ app/Filament/Resources/ForeignLanguageSkills/
     └── ForeignLanguageSkillsTable.php
 ```
 
-### 11. UserResource — access control fix
+### 11. ComputerSkillResource (Рад на рачунару)
+
+Migration history:
+- `2026_03_19_190000_create_computer_skills_table.php` — creates table with per-program columns
+- `2026_03_19_200000_split_exemption_requested_in_computer_skills.php` — drops single `exemption_requested`, adds `word_exemption_requested`, `excel_exemption_requested`, `internet_exemption_requested`
+
+#### `computer_skills`
+
+| Field | Type | Notes |
+|---|---|---|
+| user_id | foreignId | FK → users, cascade delete |
+| word_has_certificate | boolean | |
+| word_certificate_year | smallint unsigned\|null | |
+| word_exemption_requested | boolean | |
+| word_certificate_attachment | string\|null | File path (disk: public) |
+| excel_has_certificate | boolean | |
+| excel_certificate_year | smallint unsigned\|null | |
+| excel_exemption_requested | boolean | |
+| excel_certificate_attachment | string\|null | |
+| internet_has_certificate | boolean | |
+| internet_certificate_year | smallint unsigned\|null | |
+| internet_exemption_requested | boolean | |
+| internet_certificate_attachment | string\|null | |
+| timestamps | | |
+
+Model: `app/Models/ComputerSkill.php` — `$table = 'computer_skills'` (explicit), all fields fillable, boolean casts on all `*_has_certificate` and `*_exemption_requested` columns, `belongsTo(User)`.
+User model has `computerSkill(): HasOne` (one record per user).
+
+- Nav group **Мој профил**, label **Рад на рачунару**, sort=7, slug=`computer-skills`
+- `mutateFormDataBeforeCreate` sets `user_id = auth()->id()`
+- Create button label: **"Додај податке о раду на рачунару"**
+- Single record per user (`hasOne`) — same pattern as `Candidate`
+- Form has 3 sections (Microsoft Word, Microsoft Excel, Internet), each with: поседујем сертификат → година → ослобађање тестирања → прилог сертификата
+
+#### File upload behavior
+- Files stored on `public` disk under `computer-skill-attachments/{user_id}/{word|excel|internet}/`
+- `booted()` in model handles file cleanup:
+  - `updating`: loops over all 3 attachment columns — deletes old file if column `isDirty` and had a previous value
+  - `deleting`: deletes all 3 attachment files if set
+
+#### Structure
+```
+app/Filament/Resources/ComputerSkills/
+├── ComputerSkillResource.php
+├── Pages/
+│   ├── ListComputerSkills.php   ← "Додај податке о раду на рачунару"
+│   ├── CreateComputerSkill.php  ← sets user_id automatically
+│   └── EditComputerSkill.php
+├── Schemas/
+│   └── ComputerSkillForm.php
+└── Tables/
+    └── ComputerSkillsTable.php
+```
+
+### 12. UserResource — access control fix
 `canAccess()` added to `UserResource` so only users with `super_admin` role or explicit `*_user` permissions can see **Filament Shield → Users**. Without this, all authenticated users saw the page regardless of role.
 
 ---
