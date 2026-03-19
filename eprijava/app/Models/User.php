@@ -36,9 +36,9 @@ class User extends Authenticatable
         return $this->hasMany(WorkExperience::class);
     }
 
-    public function trainings(): HasMany
+    public function additionalTrainings(): HasMany
     {
-        return $this->hasMany(Training::class);
+        return $this->hasMany(AdditionalTraining::class);
     }
 
     public function foreignLanguageSkills(): HasMany

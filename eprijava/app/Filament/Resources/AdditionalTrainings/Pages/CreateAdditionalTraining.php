@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Filament\Resources\AdditionalTrainings\Pages;
+
+use App\Filament\Resources\AdditionalTrainings\AdditionalTrainingResource;
+use Filament\Resources\Pages\CreateRecord;
+
+class CreateAdditionalTraining extends CreateRecord
+{
+    protected static string $resource = AdditionalTrainingResource::class;
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $data['user_id'] = auth()->id();
+
+        return $data;
+    }
+}
