@@ -25,7 +25,6 @@ class Declaration extends Model
 
     protected $casts = [
         'wants_functional_competency_exemption' => 'boolean',
-        'behavioral_competency_checked'         => 'boolean',
         'special_conditions_needed'             => 'boolean',
         'national_minority_member'              => 'boolean',
         'employment_terminated_for_breach'      => 'boolean',

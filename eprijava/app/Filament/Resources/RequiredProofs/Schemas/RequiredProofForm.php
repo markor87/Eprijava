@@ -21,14 +21,10 @@ class RequiredProofForm
                     Select::make('proof_type')
                         ->label('Врста доказа')
                         ->options([
-                            'official_records' => 'I — Орган прибавља из службених евиденција',
-                            'personal'         => 'II — Кандидат лично доставља',
+                            'official_records' => 'Орган прибавља из службених евиденција',
+                            'personal'         => 'Кандидат лично доставља',
                         ])
                         ->required(),
-                    TextInput::make('sort_order')
-                        ->label('Редослед приказа')
-                        ->numeric()
-                        ->default(0),
                 ])
                 ->columns(2),
         ]);

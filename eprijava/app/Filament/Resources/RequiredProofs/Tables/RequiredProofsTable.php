@@ -15,21 +15,17 @@ class RequiredProofsTable
     {
         return $table
             ->columns([
-                TextColumn::make('sort_order')
-                    ->label('Ред.')
-                    ->sortable(),
                 TextColumn::make('proof_description')
                     ->label('Опис доказа')
                     ->searchable(),
                 TextColumn::make('proof_type')
                     ->label('Врста')
                     ->formatStateUsing(fn($state) => match($state) {
-                        'official_records' => 'I (Орган)',
-                        'personal'         => 'II (Кандидат)',
+                        'official_records' => 'Орган прибавља из службених евиденција',
+                        'personal'         => 'Кандидат лично доставља',
                         default            => $state,
                     }),
             ])
-            ->defaultSort('sort_order')
             ->filters([])
             ->recordActions([
                 EditAction::make(),

@@ -3,6 +3,9 @@
 namespace App\Filament\Resources\Declarations\Schemas;
 
 use App\Models\RequiredProof;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Radio;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -25,47 +28,58 @@ class DeclarationForm
 
             Section::make('Провера понашајних компетенција')
                 ->schema([
-                    Select::make('behavioral_competency_checked')
-                        ->label('Да ли вам је у претходне две године на конкурсу за рад у државним органима вршена провера понашајних компетенција')
-                        ->options([1 => 'Да', 0 => 'Не'])
-                        ->required(),
+                    Radio::make('behavioral_competency_checked')
+                        ->label('Да ли вам је у претходне две године на конкурсу за рад у државним органима вршена провера понашајних компетенција?')
+                        ->options(['yes' => 'Да', 'no' => 'Не'])
+                        ->required()
+                        ->live()
+                        ->columnSpanFull(),
                     TextInput::make('behavioral_competency_checked_body')
-                        ->label('Државни орган у ком сте конкурисали')
-                        ->visible(fn($get) => $get('behavioral_competency_checked')),
-                    Select::make('behavioral_competency_passed')
-                        ->label('Да ли сте тада успешно прошли проверу понашајних компетенција')
+                        ->label('Наведите државни орган у ком сте конкурисали када су вам тестиране понашајне компетенције')
+                        ->visible(fn($get) => $get('behavioral_competency_checked') === 'yes')
+                        ->columnSpanFull(),
+                    Radio::make('behavioral_competency_passed')
+                        ->label('Ако је претходни одговор ДА, одговорите да ли сте тада успешно прошли проверу понашајних компетенција?')
                         ->options([
                             'yes'           => 'Да',
                             'no'            => 'Не',
                             'dont_remember' => 'Не сећам се',
                         ])
-                        ->visible(fn($get) => $get('behavioral_competency_checked'))
+                        ->visible(fn($get) => $get('behavioral_competency_checked') === 'yes')
                         ->columnSpanFull(),
-                ])
-                ->columns(2),
+                ]),
 
             Section::make('Докази уз пријаву')
                 ->schema([
                     Repeater::make('declarationProofs')
                         ->relationship('declarationProofs')
-                        ->label('Докази')
-                        ->addActionLabel('Додај доказ')
+                        ->label('')
+                        ->addable(false)
+                        ->deletable(false)
+                        ->reorderable(false)
+                        ->default(fn() => RequiredProof::orderBy('sort_order')->get()->map(fn($proof) => [
+                            'required_proof_id' => $proof->id,
+                            'declaration_choice' => null,
+                        ])->toArray())
                         ->schema([
-                            Select::make('required_proof_id')
+                            Hidden::make('required_proof_id'),
+                            TextEntry::make('proof_label')
                                 ->label('Доказ')
-                                ->options(fn() => RequiredProof::orderBy('sort_order')->pluck('proof_description', 'id'))
-                                ->required()
-                                ->columnSpanFull(),
+                                ->state(fn($get) => RequiredProof::find($get('required_proof_id'))?->proof_description ?? '—'),
                             Select::make('declaration_choice')
                                 ->label('Изјава кандидата')
-                                ->options([
-                                    'consent'             => 'Сагласан сам да орган прибави из службених евиденција',
-                                    'personally_obtained' => 'Лично сам прибавио доказ и достављам га уз пријаву',
-                                    'yes'                 => 'Да (достављам)',
-                                    'no'                  => 'Не (не достављам)',
-                                ])
-                                ->required()
-                                ->columnSpanFull(),
+                                ->options(fn($get) => match(RequiredProof::find($get('required_proof_id'))?->proof_type) {
+                                    'official_records' => [
+                                        'consent'             => 'Сагласан сам да орган прибави овај доказ из службених евиденција',
+                                        'personally_obtained' => 'Лично сам прибавио доказ и достављам га уз ову пријаву',
+                                    ],
+                                    'personal' => [
+                                        'yes' => 'Да',
+                                        'no'  => 'Не',
+                                    ],
+                                    default => [],
+                                })
+                                ->required(),
                         ])
                         ->columns(2)
                         ->columnSpanFull(),
@@ -76,10 +90,11 @@ class DeclarationForm
                     Select::make('special_conditions_needed')
                         ->label('Да ли су вам потребни посебни услови за учешће у провери компетенција у оквиру селекције')
                         ->options([1 => 'Да', 0 => 'Не'])
-                        ->required(),
+                        ->required()
+                        ->live(),
                     TextInput::make('special_conditions_description')
                         ->label('Наведите које посебне услове захтевате')
-                        ->visible(fn($get) => $get('special_conditions_needed')),
+                        ->visible(fn($get) => (int) $get('special_conditions_needed') === 1),
                 ])
                 ->columns(2),
 
