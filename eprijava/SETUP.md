@@ -366,7 +366,97 @@ app/Filament/Resources/ComputerSkills/
     └── ComputerSkillsTable.php
 ```
 
-### 12. UserResource — access control fix
+### 12. AdditionalTrainingResource (Додатне обуке)
+
+Migration: `database/migrations/2026_03_19_210000_create_additional_trainings_table.php`
+
+#### `additional_trainings`
+
+| Field | Type | Notes |
+|---|---|---|
+| user_id | foreignId | FK → users, cascade delete |
+| training_name | string | Обука / страни језик |
+| institution_name | string | Назив институције |
+| location_or_level | string | Место одржавања обуке / ниво знања |
+| year | smallint unsigned\|null | Година |
+| timestamps | | |
+
+Model: `app/Models/AdditionalTraining.php` — `$table = 'additional_trainings'` (explicit), all fields fillable, `belongsTo(User)`.
+User model has `additionalTrainings(): HasMany` (previously `trainings()` → non-existent `Training::class` — renamed and corrected).
+
+- Nav group **Мој профил**, label **Додатне обуке**, sort=8, slug=`additional-trainings`
+- `mutateFormDataBeforeCreate` sets `user_id = auth()->id()`
+- Create button label: **"Додај додатну обуку"**
+- Multiple entries per user (hasMany)
+
+#### Structure
+```
+app/Filament/Resources/AdditionalTrainings/
+├── AdditionalTrainingResource.php
+├── Pages/
+│   ├── ListAdditionalTrainings.php   ← "Додај додатну обуку"
+│   ├── CreateAdditionalTraining.php  ← sets user_id automatically
+│   └── EditAdditionalTraining.php
+├── Schemas/
+│   └── AdditionalTrainingForm.php
+└── Tables/
+    └── AdditionalTrainingsTable.php
+```
+
+### 13. VacancySourceResource (Сазнавање о конкурсу)
+
+Migration: `database/migrations/2026_03_20_090000_create_vacancy_sources_table.php`
+
+#### `vacancy_sources`
+
+| Field | Type | Notes |
+|---|---|---|
+| user_id | foreignId | FK → users, cascade delete |
+| internet_presentation | json\|null | Интернет презентација checkboxes |
+| press | json\|null | Штампа checkboxes |
+| referral | json\|null | Преко пријатеља и познаника checkboxes |
+| nsz | json\|null | Национална служба за запошљавање checkboxes |
+| live | json\|null | Уживо checkboxes |
+| interested_in_other_jobs | boolean | default false |
+| timestamps | | |
+
+Model: `app/Models/VacancySource.php` — `$table = 'vacancy_sources'` (explicit), all fields fillable, `'array'` casts on all 5 json fields, `'boolean'` cast on `interested_in_other_jobs`, `belongsTo(User)`.
+User model has `vacancySource(): HasOne` (one record per user).
+
+- Nav group **Мој профил**, label **Сазнавање о конкурсу**, sort=9, slug=`vacancy-sources`
+- `mutateFormDataBeforeCreate` sets `user_id = auth()->id()`
+- Create button label: **"Додај одговоре"**
+- Single record per user (hasOne) — same pattern as Candidate / ComputerSkill
+
+#### CheckboxList options (stored as English keys, displayed as Serbian labels)
+
+| Field | Keys → Serbian labels |
+|---|---|
+| internet_presentation | `hr_services` → Службе за управљање кадровима, `organ` → Органа, `other` → друго |
+| press | `daily_newspapers` → Дневне новине, `other` → друго |
+| referral | `employee` → Запослени у органу, `manager` → Руководилац у органу, `other` → друго |
+| nsz | `internet` → Интернет презентација, `jobs_list` → Лист Послови, `advisor_invitation` → Позив саветника из НСЗ |
+| live | `job_fair` → Сајам запошљавања, `hr_unit` → Кадровска јединица органа — претходни конкурс, `university_presentation` → Презентација на факултету |
+
+- Form uses `CheckboxList` per category (same pattern as `required_education` in WorkExperienceForm)
+- `interested_in_other_jobs` uses `Select` (Да/Не)
+- Table uses `formatStateUsing` with `implode(', ', $state)` to display selected values
+
+#### Structure
+```
+app/Filament/Resources/VacancySources/
+├── VacancySourceResource.php
+├── Pages/
+│   ├── ListVacancySources.php   ← "Додај одговоре"
+│   ├── CreateVacancySource.php  ← sets user_id automatically
+│   └── EditVacancySource.php
+├── Schemas/
+│   └── VacancySourceForm.php
+└── Tables/
+    └── VacancySourcesTable.php
+```
+
+### 14. UserResource — access control fix
 `canAccess()` added to `UserResource` so only users with `super_admin` role or explicit `*_user` permissions can see **Filament Shield → Users**. Without this, all authenticated users saw the page regardless of role.
 
 ---

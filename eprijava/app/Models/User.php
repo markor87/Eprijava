@@ -51,6 +51,16 @@ class User extends Authenticatable
         return $this->hasOne(ComputerSkill::class);
     }
 
+    public function vacancySource(): HasOne
+    {
+        return $this->hasOne(VacancySource::class);
+    }
+
+    public function declaration(): HasOne
+    {
+        return $this->hasOne(Declaration::class);
+    }
+
     /**
      * The attributes that are mass assignable.
      *

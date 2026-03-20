@@ -10,6 +10,8 @@ use App\Filament\Resources\ComputerSkills\Tables\ComputerSkillsTable;
 use App\Models\ComputerSkill;
 use BackedEnum;
 use Filament\Resources\Resource;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
@@ -41,6 +43,30 @@ class ComputerSkillResource extends Resource
     public static function table(Table $table): Table
     {
         return ComputerSkillsTable::configure($table);
+    }
+
+    public static function canAccess(): bool
+    {
+        $user = Auth::user();
+        return $user && ($user->hasRole('super_admin') || $user->canAny([
+            'ViewAny:ComputerSkill',
+            'View:ComputerSkill',
+            'Create:ComputerSkill',
+            'Update:ComputerSkill',
+            'Delete:ComputerSkill',
+        ]));
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $user = Auth::user();
+        $query = parent::getEloquentQuery();
+
+        if ($user && ($user->hasRole('super_admin') || $user->can('ViewAny:ComputerSkill'))) {
+            return $query;
+        }
+
+        return $query->where('user_id', $user?->id);
     }
 
     public static function getRelations(): array

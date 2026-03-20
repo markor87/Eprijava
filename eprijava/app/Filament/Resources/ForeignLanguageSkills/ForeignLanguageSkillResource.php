@@ -10,6 +10,8 @@ use App\Filament\Resources\ForeignLanguageSkills\Tables\ForeignLanguageSkillsTab
 use App\Models\ForeignLanguageSkill;
 use BackedEnum;
 use Filament\Resources\Resource;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
@@ -41,6 +43,30 @@ class ForeignLanguageSkillResource extends Resource
     public static function table(Table $table): Table
     {
         return ForeignLanguageSkillsTable::configure($table);
+    }
+
+    public static function canAccess(): bool
+    {
+        $user = Auth::user();
+        return $user && ($user->hasRole('super_admin') || $user->canAny([
+            'ViewAny:ForeignLanguageSkill',
+            'View:ForeignLanguageSkill',
+            'Create:ForeignLanguageSkill',
+            'Update:ForeignLanguageSkill',
+            'Delete:ForeignLanguageSkill',
+        ]));
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $user = Auth::user();
+        $query = parent::getEloquentQuery();
+
+        if ($user && ($user->hasRole('super_admin') || $user->can('ViewAny:ForeignLanguageSkill'))) {
+            return $query;
+        }
+
+        return $query->where('user_id', $user?->id);
     }
 
     public static function getRelations(): array
