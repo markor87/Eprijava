@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\VacancySources\Schemas;
 
-use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -12,62 +12,27 @@ class VacancySourceForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Интернет презентација')
+            Section::make('Како сте сазнали за овај конкурс?')
                 ->schema([
-                    CheckboxList::make('internet_presentation')
+                    Radio::make('source')
                         ->label('')
                         ->options([
-                            'hr_services' => 'Службе за управљање кадровима',
-                            'organ'       => 'Органа',
-                            'other'       => 'друго',
+                            'hr_services'             => 'Интернет презентација — Службе за управљање кадровима',
+                            'organ'                   => 'Интернет презентација — Органа',
+                            'internet_other'          => 'Интернет презентација — друго',
+                            'daily_newspapers'        => 'Штампа — Дневне новине',
+                            'press_other'             => 'Штампа — друго',
+                            'employee'                => 'Преко пријатеља и познаника — Запослени у органу',
+                            'manager'                 => 'Преко пријатеља и познаника — Руководилац у органу',
+                            'referral_other'          => 'Преко пријатеља и познаника — друго',
+                            'internet'                => 'Национална служба за запошљавање — Интернет презентација',
+                            'jobs_list'               => 'Национална служба за запошљавање — Лист Послови',
+                            'advisor_invitation'      => 'Национална служба за запошљавање — Позив саветника из НСЗ',
+                            'job_fair'                => 'Уживо — Сајам запошљавања',
+                            'hr_unit'                 => 'Уживо — Кадровска јединица органа (претходни конкурс)',
+                            'university_presentation' => 'Уживо — Презентација на факултету',
                         ])
-                        ->columnSpanFull(),
-                ]),
-
-            Section::make('Штампа')
-                ->schema([
-                    CheckboxList::make('press')
-                        ->label('')
-                        ->options([
-                            'daily_newspapers' => 'Дневне новине',
-                            'other'            => 'друго',
-                        ])
-                        ->columnSpanFull(),
-                ]),
-
-            Section::make('Преко пријатеља и познаника')
-                ->schema([
-                    CheckboxList::make('referral')
-                        ->label('')
-                        ->options([
-                            'employee' => 'Запослени у органу',
-                            'manager'  => 'Руководилац у органу',
-                            'other'    => 'друго',
-                        ])
-                        ->columnSpanFull(),
-                ]),
-
-            Section::make('Национална служба за запошљавање')
-                ->schema([
-                    CheckboxList::make('nsz')
-                        ->label('')
-                        ->options([
-                            'internet'           => 'Интернет презентација',
-                            'jobs_list'          => 'Лист Послови',
-                            'advisor_invitation' => 'Позив саветника из НСЗ',
-                        ])
-                        ->columnSpanFull(),
-                ]),
-
-            Section::make('Уживо')
-                ->schema([
-                    CheckboxList::make('live')
-                        ->label('')
-                        ->options([
-                            'job_fair'                => 'Сајам запошљавања',
-                            'hr_unit'                 => 'Кадровска јединица органа — претходни конкурс',
-                            'university_presentation' => 'Презентација на факултету',
-                        ])
+                        ->required()
                         ->columnSpanFull(),
                 ]),
 

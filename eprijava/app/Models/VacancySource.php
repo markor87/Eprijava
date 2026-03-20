@@ -11,20 +11,11 @@ class VacancySource extends Model
 
     protected $fillable = [
         'user_id',
-        'internet_presentation',
-        'press',
-        'referral',
-        'nsz',
-        'live',
+        'source',
         'interested_in_other_jobs',
     ];
 
     protected $casts = [
-        'internet_presentation'    => 'array',
-        'press'                    => 'array',
-        'referral'                 => 'array',
-        'nsz'                      => 'array',
-        'live'                     => 'array',
         'interested_in_other_jobs' => 'boolean',
     ];
 
