@@ -3,17 +3,17 @@
 namespace App\Filament\Resources\ForeignLanguageSkills\Pages;
 
 use App\Filament\Resources\ForeignLanguageSkills\ForeignLanguageSkillResource;
-use Filament\Actions\CreateAction;
+use App\Models\ForeignLanguageSkillSet;
 use Filament\Resources\Pages\ListRecords;
 
 class ListForeignLanguageSkills extends ListRecords
 {
     protected static string $resource = ForeignLanguageSkillResource::class;
 
-    protected function getHeaderActions(): array
+    public function mount(): void
     {
-        return [
-            CreateAction::make()->label('Додај страни језик'),
-        ];
+        ForeignLanguageSkillSet::firstOrCreate(['user_id' => auth()->user()?->id]);
+
+        parent::mount();
     }
 }

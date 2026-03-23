@@ -2,12 +2,11 @@
 
 namespace App\Filament\Resources\ForeignLanguageSkills;
 
-use App\Filament\Resources\ForeignLanguageSkills\Pages\CreateForeignLanguageSkill;
 use App\Filament\Resources\ForeignLanguageSkills\Pages\EditForeignLanguageSkill;
 use App\Filament\Resources\ForeignLanguageSkills\Pages\ListForeignLanguageSkills;
 use App\Filament\Resources\ForeignLanguageSkills\Schemas\ForeignLanguageSkillForm;
 use App\Filament\Resources\ForeignLanguageSkills\Tables\ForeignLanguageSkillsTable;
-use App\Models\ForeignLanguageSkill;
+use App\Models\ForeignLanguageSkillSet;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,7 +18,7 @@ use UnitEnum;
 
 class ForeignLanguageSkillResource extends Resource
 {
-    protected static ?string $model = ForeignLanguageSkill::class;
+    protected static ?string $model = ForeignLanguageSkillSet::class;
 
     protected static ?string $slug = 'foreign-language-skills';
 
@@ -77,9 +76,8 @@ class ForeignLanguageSkillResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => ListForeignLanguageSkills::route('/'),
-            'create' => CreateForeignLanguageSkill::route('/create'),
-            'edit'   => EditForeignLanguageSkill::route('/{record}/edit'),
+            'index' => ListForeignLanguageSkills::route('/'),
+            'edit'  => EditForeignLanguageSkill::route('/{record}/edit'),
         ];
     }
 }
