@@ -18,7 +18,6 @@ class Declaration extends Model
         'behavioral_competency_passed',
         'special_conditions_needed',
         'special_conditions_description',
-        'national_minority_member',
         'employment_terminated_for_breach',
         'official_data_collection',
     ];
@@ -26,7 +25,6 @@ class Declaration extends Model
     protected $casts = [
         'wants_functional_competency_exemption' => 'boolean',
         'special_conditions_needed'             => 'boolean',
-        'national_minority_member'              => 'boolean',
         'employment_terminated_for_breach'      => 'boolean',
     ];
 
@@ -38,5 +36,10 @@ class Declaration extends Model
     public function declarationProofs(): HasMany
     {
         return $this->hasMany(DeclarationProof::class);
+    }
+
+    public function declarationMinorities(): HasMany
+    {
+        return $this->hasMany(DeclarationMinority::class);
     }
 }

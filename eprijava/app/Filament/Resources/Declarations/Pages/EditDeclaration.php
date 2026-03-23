@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Declarations\Pages;
 
 use App\Filament\Resources\Declarations\DeclarationResource;
+use App\Models\NationalMinority;
 use App\Models\RequiredProof;
 use Filament\Resources\Pages\EditRecord;
 
@@ -19,6 +20,16 @@ class EditDeclaration extends EditRecord
             $this->record->declarationProofs()->create([
                 'required_proof_id'  => $proofId,
                 'declaration_choice' => null,
+            ]);
+        });
+
+        $allMinorityIds = NationalMinority::pluck('id');
+        $existingMinorityIds = $this->record->declarationMinorities()->pluck('national_minority_id');
+
+        $allMinorityIds->diff($existingMinorityIds)->each(function ($minorityId) {
+            $this->record->declarationMinorities()->create([
+                'national_minority_id' => $minorityId,
+                'choice'               => null,
             ]);
         });
 

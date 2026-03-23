@@ -14,6 +14,7 @@ class HigherEducationsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->description('Наведите од најнижег до највишег звања које сте стекли (студије првог степена, студије другог степена, студије трећег степена / докторске академске студије)')
             ->columns([
                 TextColumn::make('institution_name')
                     ->label('Назив факултета / установе')

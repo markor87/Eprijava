@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Declarations\Schemas;
 
+use App\Models\NationalMinority;
 use App\Models\RequiredProof;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Radio;
@@ -100,10 +101,27 @@ class DeclarationForm
 
             Section::make('Добровољна изјава о припадности националној мањини')
                 ->schema([
-                    Select::make('national_minority_member')
-                        ->label('Да ли припадате националној мањини')
-                        ->options([1 => 'Да', 0 => 'Не'])
-                        ->required()
+                    Repeater::make('declarationMinorities')
+                        ->relationship('declarationMinorities')
+                        ->label('')
+                        ->addable(false)
+                        ->deletable(false)
+                        ->reorderable(false)
+                        ->default(fn() => NationalMinority::all()->map(fn($m) => [
+                            'national_minority_id' => $m->id,
+                            'choice'               => null,
+                        ])->toArray())
+                        ->schema([
+                            Hidden::make('national_minority_id'),
+                            TextEntry::make('minority_label')
+                                ->label('Национална мањина')
+                                ->state(fn($get) => NationalMinority::find($get('national_minority_id'))?->minority_name ?? '—'),
+                            Select::make('choice')
+                                ->label('Изјава кандидата')
+                                ->options(['yes' => 'Да', 'no' => 'Не'])
+                                ->required(),
+                        ])
+                        ->columns(2)
                         ->columnSpanFull(),
                 ]),
 

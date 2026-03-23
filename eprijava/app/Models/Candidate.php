@@ -20,6 +20,7 @@ class Candidate extends Model
         'delivery_street',
         'delivery_postal_code',
         'delivery_city',
+        'other_delivery_methods',
         'phone',
         'email',
         'alternative_delivery',

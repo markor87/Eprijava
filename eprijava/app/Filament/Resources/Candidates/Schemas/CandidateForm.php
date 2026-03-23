@@ -35,6 +35,7 @@ class CandidateForm
                 ->columns(2),
 
             Section::make('Адреса пребивалишта')
+                ->description('Наведите адресу на коју орган може да вам доставља обавештења/решења у изборном поступку, ако није иста као адреса пребивалишта')
                 ->schema([
                     TextInput::make('address_street')
                         ->label('Улица и број')
@@ -59,10 +60,15 @@ class CandidateForm
                         ->label('Поштански број'),
                     TextInput::make('delivery_city')
                         ->label('Место'),
+                    Textarea::make('other_delivery_methods')
+                        ->label('Наведите податке за остале начине доставе обавештења')
+                        ->rows(3)
+                        ->columnSpanFull(),
                 ])
                 ->columns(2),
 
             Section::make('Контакт')
+                ->description('Напомена: Број телефона и Е-адреса су обавезне рубрике за попуњавање. За потребе пријављивања на конкурсе у државним органима, потребно је да имате отворену Е-адресу за примање електронске поште. Пријаве које не садрже унету Е-адресу и број телефона ће бити одбачене.')
                 ->schema([
                     TextInput::make('phone')
                         ->label('Телефон')
@@ -78,7 +84,7 @@ class CandidateForm
             Section::make('Остало')
                 ->schema([
                     Textarea::make('alternative_delivery')
-                        ->label('Други начин доставе')
+                        ->label('Други начин на који могу да вам се достављају обавештења')
                         ->rows(3)
                         ->columnSpanFull(),
                 ]),
