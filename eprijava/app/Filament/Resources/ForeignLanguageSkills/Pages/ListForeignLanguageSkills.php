@@ -4,6 +4,7 @@ namespace App\Filament\Resources\ForeignLanguageSkills\Pages;
 
 use App\Filament\Resources\ForeignLanguageSkills\ForeignLanguageSkillResource;
 use App\Models\ForeignLanguageSkillSet;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\ListRecords;
 
 class ListForeignLanguageSkills extends ListRecords
@@ -12,8 +13,19 @@ class ListForeignLanguageSkills extends ListRecords
 
     public function mount(): void
     {
-        ForeignLanguageSkillSet::firstOrCreate(['user_id' => auth()->user()?->id]);
+        $set = ForeignLanguageSkillSet::firstOrCreate(['user_id' => auth()->user()?->id]);
 
         parent::mount();
+    }
+
+    protected function getHeaderActions(): array
+    {
+        $set = ForeignLanguageSkillSet::firstOrCreate(['user_id' => auth()->user()?->id]);
+
+        return [
+            Action::make('edit_my_skills')
+                ->label('Уреди моје вештине')
+                ->url(ForeignLanguageSkillResource::getUrl('edit', ['record' => $set->id])),
+        ];
     }
 }
