@@ -13,6 +13,7 @@ class VacancySourceForm
     {
         return $schema->components([
             Section::make('Како сте сазнали за овај конкурс?')
+                ->inlineLabel()
                 ->schema([
                     Radio::make('source')
                         ->label('')
@@ -32,17 +33,16 @@ class VacancySourceForm
                             'hr_unit'                 => 'Уживо — Кадровска јединица органа (претходни конкурс)',
                             'university_presentation' => 'Уживо — Презентација на факултету',
                         ])
-                        ->required()
-                        ->columnSpanFull(),
+                        ->required(),
                 ]),
 
             Section::make('Заинтересованост за друге послове')
+                ->inlineLabel()
                 ->schema([
                     Select::make('interested_in_other_jobs')
                         ->label('Заинтересован сам и за друге послове у државној управи и можете ме позвати на неки други одговарајући конкурс, уколико ми на овом конкурсу не буде понуђен посао')
                         ->options([1 => 'Да', 0 => 'Не'])
-                        ->required()
-                        ->columnSpanFull(),
+                        ->required(),
                 ]),
         ]);
     }

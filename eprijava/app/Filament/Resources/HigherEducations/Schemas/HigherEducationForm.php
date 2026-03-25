@@ -13,6 +13,7 @@ class HigherEducationForm
     {
         return $schema->components([
             Section::make('Високо образовање')
+                ->inlineLabel()
                 ->schema([
                     Select::make('study_type')
                         ->label('Врста студија')
@@ -22,26 +23,22 @@ class HigherEducationForm
                             'academic'            => 'Академске студије (240+ ЕСПБ)',
                             'vocational'          => 'Струковне студије',
                             'vocational_academic' => 'Струковне и академске студије',
-                        ])
-                        ->columnSpanFull(),
+                        ]),
                     TextInput::make('institution_name')
-                        ->label('Назив факултета / установе')
-                        ->columnSpanFull(),
+                        ->label('Назив факултета / установе'),
                     TextInput::make('institution_location')
                         ->label('Место'),
                     TextInput::make('volume_espb_or_years')
                         ->label('Обим студија (ЕСПБ или године)')
                         ->placeholder('нпр. 240 ЕСПБ или 4 године'),
                     TextInput::make('program_name')
-                        ->label('Назив акредитованог студијског програма, смер/модул')
-                        ->columnSpanFull(),
+                        ->label('Назив акредитованог студијског програма, смер/модул'),
                     TextInput::make('title_obtained')
                         ->label('Стечено звање'),
                     TextInput::make('graduation_date')
                         ->label('Датум завршетка (дан/месец/година)')
                         ->placeholder('нпр. 15.06.2020.'),
-                ])
-                ->columns(2),
+                ]),
         ]);
     }
 }

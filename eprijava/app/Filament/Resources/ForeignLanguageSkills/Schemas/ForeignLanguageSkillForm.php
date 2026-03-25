@@ -19,6 +19,7 @@ class ForeignLanguageSkillForm
         return $schema->components([
             Section::make('Страни језик')
                 ->description('Напомена: Ако поседујете важећи сертификат, потврду или други доказ који је тражен у конкурсном поступку и желите да на основу њега будете ослобођени тестирања компетенције знање страног језика, неопходно је да доставите и тражени доказ у оригиналу или овереној фотокопији. Комисија ће на основу приложеног доказа донети одлуку да ли може или не може да прихвати доказ који сте приложили уместо писмене/усмене провере. Сертификат је неопходно приложити на увид на дан тестирања.')
+                ->inlineLabel()
                 ->schema([
                     Repeater::make('foreignLanguageSkills')
                         ->relationship('foreignLanguageSkills')
@@ -52,17 +53,13 @@ class ForeignLanguageSkillForm
                                 ->numeric(),
                             Select::make('exemption_requested')
                                 ->label('Прилажем сертификат ради ослобађања тестирања')
-                                ->options([1 => 'Да', 0 => 'Не'])
-                                ->columnSpanFull(),
-                        ])
-                        ->columns(2)
-                        ->columnSpanFull(),
+                                ->options([1 => 'Да', 0 => 'Не']),
+                        ]),
                     FileUpload::make('certificate_attachment')
                         ->label('Прилог сертификата')
                         ->multiple()
                         ->disk('public')
-                        ->directory(fn() => 'certificate-attachments/' . auth()->user()?->id)
-                        ->columnSpanFull(),
+                        ->directory(fn() => 'certificate-attachments/' . auth()->user()?->id),
                 ]),
         ]);
     }

@@ -14,6 +14,7 @@ class ComputerSkillForm
     {
         return $schema->components([
             Section::make('Microsoft Word')
+                ->inlineLabel()
                 ->schema([
                     Select::make('word_has_certificate')
                         ->label('Поседујем сертификат')
@@ -25,17 +26,15 @@ class ComputerSkillForm
                     Select::make('word_exemption_requested')
                         ->label('Прилажем сертификат ради ослобађања тестирања дигиталне писмености')
                         ->options([1 => 'Да', 0 => 'Не'])
-                        ->required()
-                        ->columnSpanFull(),
+                        ->required(),
                     FileUpload::make('word_certificate_attachment')
                         ->label('Прилог сертификата')
                         ->disk('public')
-                        ->directory(fn() => 'computer-skill-attachments/' . auth()->id() . '/word')
-                        ->columnSpanFull(),
-                ])
-                ->columns(2),
+                        ->directory(fn() => 'computer-skill-attachments/' . auth()->id() . '/word'),
+                ]),
 
             Section::make('Microsoft Excel')
+                ->inlineLabel()
                 ->schema([
                     Select::make('excel_has_certificate')
                         ->label('Поседујем сертификат')
@@ -47,17 +46,15 @@ class ComputerSkillForm
                     Select::make('excel_exemption_requested')
                         ->label('Прилажем сертификат ради ослобађања тестирања дигиталне писмености')
                         ->options([1 => 'Да', 0 => 'Не'])
-                        ->required()
-                        ->columnSpanFull(),
+                        ->required(),
                     FileUpload::make('excel_certificate_attachment')
                         ->label('Прилог сертификата')
                         ->disk('public')
-                        ->directory(fn() => 'computer-skill-attachments/' . auth()->id() . '/excel')
-                        ->columnSpanFull(),
-                ])
-                ->columns(2),
+                        ->directory(fn() => 'computer-skill-attachments/' . auth()->id() . '/excel'),
+                ]),
 
             Section::make('Internet')
+                ->inlineLabel()
                 ->schema([
                     Select::make('internet_has_certificate')
                         ->label('Поседујем сертификат')
@@ -69,15 +66,12 @@ class ComputerSkillForm
                     Select::make('internet_exemption_requested')
                         ->label('Прилажем сертификат ради ослобађања тестирања дигиталне писмености')
                         ->options([1 => 'Да', 0 => 'Не'])
-                        ->required()
-                        ->columnSpanFull(),
+                        ->required(),
                     FileUpload::make('internet_certificate_attachment')
                         ->label('Прилог сертификата')
                         ->disk('public')
-                        ->directory(fn() => 'computer-skill-attachments/' . auth()->id() . '/internet')
-                        ->columnSpanFull(),
-                ])
-                ->columns(2),
+                        ->directory(fn() => 'computer-skill-attachments/' . auth()->id() . '/internet'),
+                ]),
         ]);
     }
 }

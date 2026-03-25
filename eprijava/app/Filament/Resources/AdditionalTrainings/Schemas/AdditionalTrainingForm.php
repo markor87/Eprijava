@@ -12,6 +12,7 @@ class AdditionalTrainingForm
     {
         return $schema->components([
             Section::make('Додатна обука')
+                ->inlineLabel()
                 ->schema([
                     TextInput::make('training_name')
                         ->label('Обука / страни језик')
@@ -25,8 +26,7 @@ class AdditionalTrainingForm
                     TextInput::make('year')
                         ->label('Година')
                         ->numeric(),
-                ])
-                ->columns(2),
+                ]),
         ]);
     }
 }

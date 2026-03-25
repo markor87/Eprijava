@@ -12,10 +12,10 @@ class HighSchoolEducationForm
     {
         return $schema->components([
             Section::make('Средња школа / Гимназија')
+                ->inlineLabel()
                 ->schema([
                     TextInput::make('institution_name')
-                        ->label('Назив школе')
-                        ->columnSpanFull(),
+                        ->label('Назив школе'),
                     TextInput::make('institution_location')
                         ->label('Седиште школе'),
                     TextInput::make('duration')
@@ -24,15 +24,13 @@ class HighSchoolEducationForm
                         ->label('Смер'),
                     TextInput::make('occupation')
                         ->label('Занимање')
-                        ->hint('Не попуњавају кандидати који су завршили гимназију')
-                        ->columnSpanFull(),
+                        ->helperText('Не попуњавају кандидати који су завршили гимназију'),
                     TextInput::make('graduation_year')
                         ->label('Година завршетка')
                         ->numeric()
                         ->minValue(1950)
                         ->maxValue(2099),
-                ])
-                ->columns(2),
+                ]),
         ]);
     }
 }

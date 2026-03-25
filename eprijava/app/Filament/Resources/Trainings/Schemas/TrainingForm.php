@@ -14,6 +14,7 @@ class TrainingForm
     {
         return $schema->components([
             Section::make('Стручни и други испити')
+                ->inlineLabel()
                 ->schema([
                     Select::make('has_certificate')
                         ->label('Да ли поседујете сертификат')
@@ -32,13 +33,10 @@ class TrainingForm
                             'Испит за инспектора'   => 'Испит за инспектора',
                             'Правосудни испит'      => 'Правосудни испит',
                         ])
-                        ->required()
-                        ->columnSpanFull(),
+                        ->required(),
                     TextInput::make('issuing_authority')
-                        ->label('Назив органа / правног лица које је издало доказ')
-                        ->columnSpanFull(),
-                ])
-                ->columns(2),
+                        ->label('Назив органа / правног лица које је издало доказ'),
+                ]),
         ]);
     }
 }
