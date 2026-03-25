@@ -24,7 +24,7 @@ class ListForeignLanguageSkills extends ListRecords
 
         return [
             Action::make('edit_my_skills')
-                ->label('Уреди моје вештине')
+                ->label('Додај страни језик')
                 ->url(ForeignLanguageSkillResource::getUrl('edit', ['record' => $set->id])),
         ];
     }
