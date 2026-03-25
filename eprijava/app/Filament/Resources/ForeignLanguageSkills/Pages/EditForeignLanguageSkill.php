@@ -4,11 +4,18 @@ namespace App\Filament\Resources\ForeignLanguageSkills\Pages;
 
 use App\Filament\Resources\ForeignLanguageSkills\ForeignLanguageSkillResource;
 use App\Models\ForeignLanguage;
+use App\Models\ForeignLanguageSkillSet;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Database\Eloquent\Model;
 
 class EditForeignLanguageSkill extends EditRecord
 {
     protected static string $resource = ForeignLanguageSkillResource::class;
+
+    protected function resolveRecord(int|string $key): Model
+    {
+        return ForeignLanguageSkillSet::findOrFail($key);
+    }
 
     protected function mutateFormDataBeforeFill(array $data): array
     {

@@ -6,6 +6,7 @@ use App\Filament\Resources\ForeignLanguageSkills\Pages\EditForeignLanguageSkill;
 use App\Filament\Resources\ForeignLanguageSkills\Pages\ListForeignLanguageSkills;
 use App\Filament\Resources\ForeignLanguageSkills\Schemas\ForeignLanguageSkillForm;
 use App\Filament\Resources\ForeignLanguageSkills\Tables\ForeignLanguageSkillsTable;
+use App\Models\ForeignLanguageSkill;
 use App\Models\ForeignLanguageSkillSet;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -18,7 +19,7 @@ use UnitEnum;
 
 class ForeignLanguageSkillResource extends Resource
 {
-    protected static ?string $model = ForeignLanguageSkillSet::class;
+    protected static ?string $model = ForeignLanguageSkill::class;
 
     protected static ?string $slug = 'foreign-language-skills';
 
@@ -65,7 +66,7 @@ class ForeignLanguageSkillResource extends Resource
             return $query;
         }
 
-        return $query->where('user_id', $user?->id);
+        return $query->whereHas('foreignLanguageSkillSet', fn($q) => $q->where('user_id', $user?->id));
     }
 
     public static function getRelations(): array
