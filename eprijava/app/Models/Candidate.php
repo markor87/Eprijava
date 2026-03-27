@@ -35,4 +35,14 @@ class Candidate extends Model
     {
         return $this->belongsTo(Place::class, 'place_of_birth_id');
     }
+
+    public function addressCity(): BelongsTo
+    {
+        return $this->belongsTo(Place::class, 'address_city');
+    }
+
+    public function deliveryCity(): BelongsTo
+    {
+        return $this->belongsTo(Place::class, 'delivery_city');
+    }
 }

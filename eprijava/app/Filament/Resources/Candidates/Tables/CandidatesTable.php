@@ -31,7 +31,7 @@ class CandidatesTable
                     ->searchable(),
                 TextColumn::make('phone')
                     ->label('Телефон'),
-                TextColumn::make('address_city')
+                TextColumn::make('addressCity.name')
                     ->label('Место')
                     ->searchable(),
                 TextColumn::make('created_at')

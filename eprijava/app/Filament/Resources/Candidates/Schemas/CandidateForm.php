@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Candidates\Schemas;
 
 use App\Models\Place;
 use App\Rules\Jmbg;
+use App\Rules\SerbianCyrillic;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -20,9 +21,11 @@ class CandidateForm
                 ->schema([
                     TextInput::make('first_name')
                         ->label('Име')
+                        ->rule(new SerbianCyrillic())
                         ->required(),
                     TextInput::make('last_name')
                         ->label('Презиме')
+                        ->rule(new SerbianCyrillic())
                         ->required(),
                     TextInput::make('national_id')
                         ->label('Матични број (ЈМБГ)')
@@ -50,8 +53,8 @@ class CandidateForm
                 ->schema([
                     TextInput::make('address_street')
                         ->label('Улица и број')
-                        ->required()
-,
+                        ->rule(new SerbianCyrillic())
+                        ->required(),
                     TextInput::make('address_postal_code')
                         ->label('Поштански број')
                         ->regex('/^[123]\d{4}$/')
@@ -70,7 +73,7 @@ class CandidateForm
                 ->schema([
                     TextInput::make('delivery_street')
                         ->label('Улица и број')
-,
+                        ->rule(new SerbianCyrillic()),
                     TextInput::make('delivery_postal_code')
                         ->label('Поштански број')
                         ->regex('/^[123]\d{4}$/'),
@@ -80,8 +83,8 @@ class CandidateForm
                         ->searchable(),
                     Textarea::make('other_delivery_methods')
                         ->label('Наведите податке за остале начине доставе обавештења')
-                        ->rows(3)
-,
+                        ->rule(new SerbianCyrillic())
+                        ->rows(3),
                 ])
                 ,
 
@@ -105,8 +108,8 @@ class CandidateForm
                 ->schema([
                     Textarea::make('alternative_delivery')
                         ->label('Други начин на који могу да вам се достављају обавештења')
-                        ->rows(3)
-,
+                        ->rule(new SerbianCyrillic())
+                        ->rows(3),
                 ]),
         ]);
     }
