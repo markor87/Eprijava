@@ -13,7 +13,7 @@ class Candidate extends Model
         'last_name',
         'national_id',
         'citizenship',
-        'place_of_birth',
+        'place_of_birth_id',
         'address_street',
         'address_postal_code',
         'address_city',
@@ -29,5 +29,10 @@ class Candidate extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function placeOfBirth(): BelongsTo
+    {
+        return $this->belongsTo(Place::class, 'place_of_birth_id');
     }
 }

@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\Candidates\Schemas;
 
+use App\Models\Place;
+use App\Rules\Jmbg;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Components\Section;
@@ -24,14 +27,20 @@ class CandidateForm
                     TextInput::make('national_id')
                         ->label('Матични број (ЈМБГ)')
                         ->required()
-                        ->length(13),
-                    TextInput::make('citizenship')
+                        ->maxLength(13)
+                        ->rule(new Jmbg()),
+                    Select::make('citizenship')
                         ->label('Држављанство')
+                        ->options([
+                            'српско' => 'Српско',
+                            'остало' => 'Остало',
+                        ])
                         ->required(),
-                    TextInput::make('place_of_birth')
+                    Select::make('place_of_birth_id')
                         ->label('Место рођења')
-                        ->required()
-,
+                        ->options(Place::query()->orderBy('name')->pluck('name', 'id'))
+                        ->searchable()
+                        ->required(),
                 ])
                 ,
 
