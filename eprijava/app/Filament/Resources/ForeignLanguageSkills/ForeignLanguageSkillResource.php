@@ -7,7 +7,6 @@ use App\Filament\Resources\ForeignLanguageSkills\Pages\ListForeignLanguageSkills
 use App\Filament\Resources\ForeignLanguageSkills\Schemas\ForeignLanguageSkillForm;
 use App\Filament\Resources\ForeignLanguageSkills\Tables\ForeignLanguageSkillsTable;
 use App\Models\ForeignLanguageSkill;
-use App\Models\ForeignLanguageSkillSet;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;

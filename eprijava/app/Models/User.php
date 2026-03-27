@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Permission\Traits\HasRoles;
@@ -68,9 +69,15 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'government_body_id',
         'email',
         'password',
     ];
+
+    public function governmentBody(): BelongsTo
+    {
+        return $this->belongsTo(GovernmentBody::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.

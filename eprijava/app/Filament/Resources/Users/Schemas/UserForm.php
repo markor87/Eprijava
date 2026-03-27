@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
+use App\Models\GovernmentBody;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -15,6 +16,11 @@ class UserForm
             ->components([
                 TextInput::make('name')
                     ->required(),
+                Select::make('government_body_id')
+                    ->label('Government Body')
+                    ->options(GovernmentBody::query()->pluck('name', 'id'))
+                    ->searchable()
+                    ->nullable(),
                 TextInput::make('email')
                     ->label('Email address')
                     ->email()
