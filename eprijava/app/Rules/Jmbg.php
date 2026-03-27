@@ -18,6 +18,26 @@ class Jmbg implements ValidationRule
 
         $d = array_map('intval', str_split($value));
 
+        // Validate date of birth (DDMMYYY)
+        $day   = (int) substr($value, 0, 2);
+        $month = (int) substr($value, 2, 2);
+        $yyy   = (int) substr($value, 4, 3);
+        $year  = $yyy >= 100 ? 1000 + $yyy : 2000 + $yyy;
+
+        if (!checkdate($month, $day, $year)) {
+            $fail('Матични број није исправан.');
+            return;
+        }
+
+        // Validate region code (RR): only 70–99 were ever assigned
+        $region = (int) substr($value, 7, 2);
+
+        if ($region < 70 || $region > 99) {
+            $fail('Матични број није исправан.');
+            return;
+        }
+
+        // Validate check digit
         $sum = 7 * ($d[0] + $d[6])
              + 6 * ($d[1] + $d[7])
              + 5 * ($d[2] + $d[8])

@@ -55,8 +55,10 @@ class CandidateForm
                     TextInput::make('address_postal_code')
                         ->label('Поштански број')
                         ->required(),
-                    TextInput::make('address_city')
+                    Select::make('address_city')
                         ->label('Место')
+                        ->options(Place::query()->orderBy('name')->pluck('name', 'id'))
+                        ->searchable()
                         ->required(),
                 ])
                 ,
@@ -70,8 +72,10 @@ class CandidateForm
 ,
                     TextInput::make('delivery_postal_code')
                         ->label('Поштански број'),
-                    TextInput::make('delivery_city')
-                        ->label('Место'),
+                    Select::make('delivery_city')
+                        ->label('Место')
+                        ->options(Place::query()->orderBy('name')->pluck('name', 'id'))
+                        ->searchable(),
                     Textarea::make('other_delivery_methods')
                         ->label('Наведите податке за остале начине доставе обавештења')
                         ->rows(3)
