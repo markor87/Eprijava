@@ -54,6 +54,7 @@ class CandidateForm
 ,
                     TextInput::make('address_postal_code')
                         ->label('Поштански број')
+                        ->regex('/^[123]\d{4}$/')
                         ->required(),
                     Select::make('address_city')
                         ->label('Место')
@@ -71,7 +72,8 @@ class CandidateForm
                         ->label('Улица и број')
 ,
                     TextInput::make('delivery_postal_code')
-                        ->label('Поштански број'),
+                        ->label('Поштански број')
+                        ->regex('/^[123]\d{4}$/'),
                     Select::make('delivery_city')
                         ->label('Место')
                         ->options(Place::query()->orderBy('name')->pluck('name', 'id'))
