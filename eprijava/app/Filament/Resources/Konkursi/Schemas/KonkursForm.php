@@ -19,8 +19,9 @@ class KonkursForm
                     Select::make('government_body_id')
                         ->label('Државни орган')
                         ->options(GovernmentBody::query()->pluck('name', 'id'))
-                        ->searchable()
-                        ->required(),
+                        ->default(fn() => auth()->user()?->government_body_id)
+                        ->disabled()
+                        ->dehydrated(false),
                     Select::make('tip_konkursa')
                         ->label('Тип конкурса')
                         ->options(['Јавни' => 'Јавни', 'Интерни' => 'Интерни'])

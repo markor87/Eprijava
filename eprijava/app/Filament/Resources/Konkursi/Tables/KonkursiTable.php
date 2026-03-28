@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Konkursi\Tables;
 
+use App\Filament\Resources\JobPositions\JobPositionResource;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -33,6 +35,9 @@ class KonkursiTable
             ])
             ->filters([])
             ->recordActions([
+                Action::make('job_positions')
+                    ->label('Радна места')
+                    ->url(fn($record) => JobPositionResource::getUrl('index', ['competition_id' => $record->id])),
                 EditAction::make(),
                 DeleteAction::make(),
             ])

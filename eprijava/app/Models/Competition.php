@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Competition extends Model
 {
@@ -30,5 +31,10 @@ class Competition extends Model
     public function governmentBody(): BelongsTo
     {
         return $this->belongsTo(GovernmentBody::class);
+    }
+
+    public function jobPositions(): HasMany
+    {
+        return $this->hasMany(JobPosition::class);
     }
 }
