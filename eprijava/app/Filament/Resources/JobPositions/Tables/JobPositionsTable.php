@@ -15,9 +15,21 @@ class JobPositionsTable
     {
         return $table
             ->columns([
+                TextColumn::make('sequence_number')
+                    ->label('Рб.')
+                    ->sortable(),
                 TextColumn::make('position_name')
                     ->label('Назив радног места')
                     ->searchable()
+                    ->sortable(),
+                TextColumn::make('employment_type')
+                    ->label('Врста радног односа')
+                    ->sortable(),
+                TextColumn::make('workLocation.name')
+                    ->label('Место рада')
+                    ->sortable(),
+                TextColumn::make('executor_count')
+                    ->label('Број извршилаца')
                     ->sortable(),
             ])
             ->filters([])

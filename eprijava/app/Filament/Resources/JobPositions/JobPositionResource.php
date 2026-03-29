@@ -46,6 +46,14 @@ class JobPositionResource extends Resource
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
         $query = parent::getEloquentQuery();
+
+        // Only filter on the list page — edit/create pages use record ID in the path
+        $onListPage = !preg_match('#/job-positions/\d#', request()->path());
+
+        if (!$onListPage) {
+            return $query;
+        }
+
         $competitionId = request()->query('competition_id');
 
         if (!$competitionId) {
