@@ -2,10 +2,11 @@
 
 namespace App\Filament\Resources\HigherEducations\Schemas;
 
-use App\Models\AcademicTitle;
+use App\Filament\Resources\AcademicTitles\Tables\AcademicTitleSelectTable;
 use App\Models\Place;
 use App\Rules\SerbianCyrillic;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\ModalTableSelect;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
@@ -49,14 +50,11 @@ class HigherEducationForm
                     TextInput::make('program_name')
                         ->label('Назив акредитованог студијског програма, смер/модул')
                         ->rule(new SerbianCyrillic()),
-                    Select::make('title_id')
+                    ModalTableSelect::make('title_id')
                         ->label('Стечено звање')
-                        ->options(
-                            AcademicTitle::all()->mapWithKeys(
-                                fn($r) => [$r->id => "{$r->educational_scientific_field} — {$r->scientific_professional_area} — {$r->title}"]
-                            )
-                        )
-                        ->searchable(),
+                        ->tableConfiguration(AcademicTitleSelectTable::class)
+                        ->relationship('academicTitle', 'title')
+                        ->getOptionLabelFromRecordUsing(fn($record) => "{$record->educational_scientific_field} — {$record->scientific_professional_area} — {$record->title}"),
                     DatePicker::make('graduation_date')
                         ->label('Датум завршетка')
                         ->native(false),
