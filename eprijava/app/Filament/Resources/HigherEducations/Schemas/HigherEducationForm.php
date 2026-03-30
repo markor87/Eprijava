@@ -2,6 +2,10 @@
 
 namespace App\Filament\Resources\HigherEducations\Schemas;
 
+use App\Models\AcademicTitle;
+use App\Models\Place;
+use App\Rules\SerbianCyrillic;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
@@ -20,24 +24,42 @@ class HigherEducationForm
                         ->options([
                             'basic_4yr'           => 'Основне студије у трајању од најмање 4 године (до 10.9.2005.)',
                             '3yr'                 => 'Студије у трајању до 3 године (до 10.9.2005.) / 180 ЕСПБ',
-                            'academic'            => 'Академске студије (240+ ЕСПБ)',
+                            'academic'            => 'Академске студије',
                             'vocational'          => 'Струковне студије',
                             'vocational_academic' => 'Струковне и академске студије',
-                        ]),
+                        ])
+                        ->live(),
+                    Select::make('volume_espb')
+                        ->label('Обим студија (ЕСПБ)')
+                        ->options(fn($get) => match($get('study_type')) {
+                            'basic_4yr'           => [240 => '240'],
+                            '3yr'                 => [180 => '180'],
+                            'academic'            => [60 => '60', 120 => '120', 240 => '240'],
+                            'vocational'          => [60 => '60', 120 => '120', 180 => '180', 240 => '240', 300 => '300', 420 => '420'],
+                            'vocational_academic' => [60 => '60', 120 => '120', 180 => '180', 240 => '240', 300 => '300', 420 => '420'],
+                            default               => [],
+                        }),
                     TextInput::make('institution_name')
-                        ->label('Назив факултета / установе'),
-                    TextInput::make('institution_location')
-                        ->label('Место'),
-                    TextInput::make('volume_espb_or_years')
-                        ->label('Обим студија (ЕСПБ или године)')
-                        ->placeholder('нпр. 240 ЕСПБ или 4 године'),
+                        ->label('Назив факултета / установе')
+                        ->rule(new SerbianCyrillic()),
+                    Select::make('institution_location_id')
+                        ->label('Место')
+                        ->options(Place::query()->orderBy('name')->pluck('name', 'id'))
+                        ->searchable(),
                     TextInput::make('program_name')
-                        ->label('Назив акредитованог студијског програма, смер/модул'),
-                    TextInput::make('title_obtained')
-                        ->label('Стечено звање'),
-                    TextInput::make('graduation_date')
-                        ->label('Датум завршетка (дан/месец/година)')
-                        ->placeholder('нпр. 15.06.2020.'),
+                        ->label('Назив акредитованог студијског програма, смер/модул')
+                        ->rule(new SerbianCyrillic()),
+                    Select::make('title_id')
+                        ->label('Стечено звање')
+                        ->options(
+                            AcademicTitle::all()->mapWithKeys(
+                                fn($r) => [$r->id => "{$r->educational_scientific_field} — {$r->scientific_professional_area} — {$r->title}"]
+                            )
+                        )
+                        ->searchable(),
+                    DatePicker::make('graduation_date')
+                        ->label('Датум завршетка')
+                        ->native(false),
                 ]),
         ]);
     }

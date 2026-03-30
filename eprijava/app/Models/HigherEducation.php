@@ -12,16 +12,26 @@ class HigherEducation extends Model
     protected $fillable = [
         'user_id',
         'study_type',
+        'volume_espb',
         'institution_name',
-        'institution_location',
-        'volume_espb_or_years',
+        'institution_location_id',
         'program_name',
-        'title_obtained',
+        'title_id',
         'graduation_date',
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function institutionLocation(): BelongsTo
+    {
+        return $this->belongsTo(Place::class, 'institution_location_id');
+    }
+
+    public function academicTitle(): BelongsTo
+    {
+        return $this->belongsTo(AcademicTitle::class, 'title_id');
     }
 }

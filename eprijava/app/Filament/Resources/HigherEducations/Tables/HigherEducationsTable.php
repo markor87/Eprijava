@@ -20,9 +20,9 @@ class HigherEducationsTable
                     ->label('Назив факултета / установе')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('institution_location')
+                TextColumn::make('institutionLocation.name')
                     ->label('Место')
-                    ->searchable(),
+                    ->sortable(),
                 TextColumn::make('study_type')
                     ->label('Врста студија')
                     ->formatStateUsing(fn($state) => match ($state) {
