@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\HighSchoolEducations\Pages;
 
 use App\Filament\Resources\HighSchoolEducations\HighSchoolEducationResource;
+use App\Models\HighSchoolEducation;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
@@ -12,7 +13,9 @@ class ListHighSchoolEducations extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [
+        $hasRecord = HighSchoolEducation::where('user_id', auth()->id())->exists();
+
+        return $hasRecord ? [] : [
             CreateAction::make()->label('Додај школу'),
         ];
     }

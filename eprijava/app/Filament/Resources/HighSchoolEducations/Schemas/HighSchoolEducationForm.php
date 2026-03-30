@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\HighSchoolEducations\Schemas;
 
+use App\Rules\SerbianCyrillic;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -15,15 +17,20 @@ class HighSchoolEducationForm
                 ->inlineLabel()
                 ->schema([
                     TextInput::make('institution_name')
-                        ->label('Назив школе'),
+                        ->label('Назив школе')
+                        ->rule(new SerbianCyrillic()),
                     TextInput::make('institution_location')
-                        ->label('Седиште школе'),
-                    TextInput::make('duration')
-                        ->label('Трајање'),
+                        ->label('Седиште школе')
+                        ->rule(new SerbianCyrillic()),
+                    Select::make('duration')
+                        ->label('Трајање')
+                        ->options([1 => '1', 2 => '2', 3 => '3', 4 => '4']),
                     TextInput::make('direction')
-                        ->label('Смер'),
+                        ->label('Смер')
+                        ->rule(new SerbianCyrillic()),
                     TextInput::make('occupation')
                         ->label('Занимање')
+                        ->rule(new SerbianCyrillic())
                         ->helperText('Не попуњавају кандидати који су завршили гимназију'),
                     TextInput::make('graduation_year')
                         ->label('Година завршетка')
