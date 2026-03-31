@@ -91,6 +91,10 @@ class CompetitionsResource extends Resource
 
     public static function canDelete(Model $record): bool
     {
+        if ($record->jobPositions()->exists()) {
+            return false;
+        }
+
         /** @var User|null $user */
         $user = Auth::user();
         return $user && ($user->hasRole('super_admin') || (

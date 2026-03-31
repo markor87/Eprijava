@@ -40,4 +40,9 @@ class JobPosition extends Model
     {
         return $this->belongsTo(Place::class, 'work_location_id');
     }
+
+    public function rank(): BelongsTo
+    {
+        return $this->belongsTo(Rank::class, 'title_id');
+    }
 }

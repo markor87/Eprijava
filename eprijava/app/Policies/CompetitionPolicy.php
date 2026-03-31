@@ -34,6 +34,10 @@ class CompetitionPolicy
 
     public function delete(AuthUser $authUser, Competition $competition): bool
     {
+        if ($competition->jobPositions()->exists()) {
+            return false;
+        }
+
         return $authUser->can('Delete:Competition');
     }
 

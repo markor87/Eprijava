@@ -11,6 +11,11 @@ class ListJobPositions extends ListRecords
 {
     protected static string $resource = JobPositionResource::class;
 
+    public function getBreadcrumbs(): array
+    {
+        return [];
+    }
+
     public function getTitle(): string
     {
         $competitionId = request()->query('competition_id');

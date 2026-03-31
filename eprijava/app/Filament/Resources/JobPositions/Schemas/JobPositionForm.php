@@ -4,6 +4,7 @@ namespace App\Filament\Resources\JobPositions\Schemas;
 
 use App\Models\AcademicTitle;
 use App\Models\Place;
+use App\Models\Rank;
 use App\Rules\SerbianCyrillic;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -65,9 +66,10 @@ class JobPositionForm
                             ->pluck('scientific_professional_area', 'scientific_professional_area')
                         )
                         ->searchable(),
-                    TextInput::make('title_id')
+                    Select::make('title_id')
                         ->label('Звање')
-                        ->numeric(),
+                        ->options(Rank::query()->orderBy('name')->pluck('name', 'id'))
+                        ->searchable(),
                     TextInput::make('qualification_level')
                         ->label('Стручна спрема')
                         ->rule(new SerbianCyrillic()),
