@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Filament\Resources\Konkursi;
+namespace App\Filament\Resources\Competitions;
 
-use App\Filament\Resources\Konkursi\Pages\CreateKonkurs;
-use App\Filament\Resources\Konkursi\Pages\EditKonkurs;
-use App\Filament\Resources\Konkursi\Pages\ListKonkursi;
-use App\Filament\Resources\Konkursi\Schemas\KonkursForm;
-use App\Filament\Resources\Konkursi\Tables\KonkursiTable;
+use App\Filament\Resources\Competitions\Pages\CreateCompetition;
+use App\Filament\Resources\Competitions\Pages\EditCompetition;
+use App\Filament\Resources\Competitions\Pages\ListCompetitions;
+use App\Filament\Resources\Competitions\Schemas\CompetitionForm;
+use App\Filament\Resources\Competitions\Tables\CompetitionsTable;
 use App\Models\Competition;
 use App\Models\User;
 use BackedEnum;
@@ -19,7 +19,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use UnitEnum;
 
-class KonkursiResource extends Resource
+class CompetitionsResource extends Resource
 {
     protected static ?string $model = Competition::class;
 
@@ -39,12 +39,12 @@ class KonkursiResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return KonkursForm::configure($schema);
+        return CompetitionForm::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return KonkursiTable::configure($table);
+        return CompetitionsTable::configure($table);
     }
 
     public static function canAccess(): bool
@@ -116,9 +116,9 @@ class KonkursiResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => ListKonkursi::route('/'),
-            'create' => CreateKonkurs::route('/create'),
-            'edit'   => EditKonkurs::route('/{record}/edit'),
+            'index'  => ListCompetitions::route('/'),
+            'create' => CreateCompetition::route('/create'),
+            'edit'   => EditCompetition::route('/{record}/edit'),
         ];
     }
 }

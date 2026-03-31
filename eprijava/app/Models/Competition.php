@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Competition extends Model
 {
-    protected $table = 'konkursi';
-
     protected $fillable = [
         'user_id',
         'government_body_id',

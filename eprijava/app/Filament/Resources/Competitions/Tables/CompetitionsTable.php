@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Konkursi\Tables;
+namespace App\Filament\Resources\Competitions\Tables;
 
 use App\Filament\Resources\JobPositions\JobPositionResource;
 use Filament\Actions\Action;
@@ -9,7 +9,7 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class KonkursiTable
+class CompetitionsTable
 {
     public static function configure(Table $table): Table
     {

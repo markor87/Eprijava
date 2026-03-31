@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\Konkursi\Pages;
+namespace App\Filament\Resources\Competitions\Pages;
 
-use App\Filament\Resources\Konkursi\KonkursiResource;
+use App\Filament\Resources\Competitions\CompetitionsResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
-class ListKonkursi extends ListRecords
+class ListCompetitions extends ListRecords
 {
-    protected static string $resource = KonkursiResource::class;
+    protected static string $resource = CompetitionsResource::class;
 
     protected function getHeaderActions(): array
     {

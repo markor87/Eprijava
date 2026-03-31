@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Filament\Resources\Konkursi\Pages;
+namespace App\Filament\Resources\Competitions\Pages;
 
-use App\Filament\Resources\Konkursi\KonkursiResource;
+use App\Filament\Resources\Competitions\CompetitionsResource;
 use Filament\Resources\Pages\CreateRecord;
 
-class CreateKonkurs extends CreateRecord
+class CreateCompetition extends CreateRecord
 {
-    protected static string $resource = KonkursiResource::class;
+    protected static string $resource = CompetitionsResource::class;
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {

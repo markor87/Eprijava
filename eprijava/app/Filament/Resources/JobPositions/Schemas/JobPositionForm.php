@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\JobPositions\Schemas;
 
+use App\Models\AcademicTitle;
 use App\Models\Place;
 use App\Rules\SerbianCyrillic;
 use Filament\Forms\Components\Select;
@@ -42,14 +43,30 @@ class JobPositionForm
                         ->label('Место рада')
                         ->options(Place::query()->orderBy('name')->pluck('name', 'id'))
                         ->searchable(),
-                    TextInput::make('educational_scientific_field_id')
-                        ->label('Образовно-научна област (ID)')
-                        ->numeric(),
-                    TextInput::make('scientific_professional_field_id')
-                        ->label('Научно-стручна област (ID)')
-                        ->numeric(),
+                    Select::make('educational_scientific_field_id')
+                        ->label('Образовно-научна област')
+                        ->options(
+                            AcademicTitle::query()
+                                ->distinct()
+                                ->orderBy('educational_scientific_field')
+                                ->pluck('educational_scientific_field', 'educational_scientific_field')
+                        )
+                        ->searchable()
+                        ->live(),
+                    Select::make('scientific_professional_field_id')
+                        ->label('Научно-стручна област')
+                        ->options(fn($get) => AcademicTitle::query()
+                            ->when(
+                                $get('educational_scientific_field_id'),
+                                fn($q, $field) => $q->where('educational_scientific_field', $field)
+                            )
+                            ->distinct()
+                            ->orderBy('scientific_professional_area')
+                            ->pluck('scientific_professional_area', 'scientific_professional_area')
+                        )
+                        ->searchable(),
                     TextInput::make('title_id')
-                        ->label('Звање (ID)')
+                        ->label('Звање')
                         ->numeric(),
                     TextInput::make('qualification_level')
                         ->label('Стручна спрема')

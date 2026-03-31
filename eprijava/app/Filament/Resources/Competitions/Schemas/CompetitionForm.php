@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Konkursi\Schemas;
+namespace App\Filament\Resources\Competitions\Schemas;
 
 use App\Models\GovernmentBody;
 use Filament\Forms\Components\DatePicker;
@@ -8,7 +8,7 @@ use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
-class KonkursForm
+class CompetitionForm
 {
     public static function configure(Schema $schema): Schema
     {
