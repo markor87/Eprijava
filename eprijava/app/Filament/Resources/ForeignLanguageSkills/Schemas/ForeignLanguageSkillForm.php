@@ -27,9 +27,6 @@ class ForeignLanguageSkillForm
                         ->addable(false)
                         ->deletable(false)
                         ->reorderable(false)
-                        ->default(fn() => ForeignLanguage::all()->map(fn($l) => [
-                            'foreign_language_id' => $l->id,
-                        ])->toArray())
                         ->schema([
                             Hidden::make('foreign_language_id'),
                             TextEntry::make('language_label')

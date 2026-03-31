@@ -29,6 +29,7 @@ class HigherEducationForm
                             'vocational'          => 'Струковне студије',
                             'vocational_academic' => 'Струковне и академске студије',
                         ])
+                        ->required()
                         ->live(),
                     Select::make('volume_espb')
                         ->label('Обим студија (ЕСПБ)')
@@ -39,24 +40,30 @@ class HigherEducationForm
                             'vocational'          => [60 => '60', 120 => '120', 180 => '180', 240 => '240', 300 => '300', 420 => '420'],
                             'vocational_academic' => [60 => '60', 120 => '120', 180 => '180', 240 => '240', 300 => '300', 420 => '420'],
                             default               => [],
-                        }),
+                        })
+                        ->required(),
                     TextInput::make('institution_name')
                         ->label('Назив факултета / установе')
+                        ->required()
                         ->rule(new SerbianCyrillic()),
                     Select::make('institution_location_id')
                         ->label('Место')
                         ->options(Place::query()->orderBy('name')->pluck('name', 'id'))
-                        ->searchable(),
+                        ->searchable()
+                        ->required(),
                     TextInput::make('program_name')
                         ->label('Назив акредитованог студијског програма, смер/модул')
+                        ->required()
                         ->rule(new SerbianCyrillic()),
                     ModalTableSelect::make('title_id')
                         ->label('Стечено звање')
                         ->tableConfiguration(AcademicTitleSelectTable::class)
                         ->relationship('academicTitle', 'title')
-                        ->getOptionLabelFromRecordUsing(fn($record) => "{$record->educational_scientific_field} — {$record->scientific_professional_area} — {$record->title}"),
+                        ->getOptionLabelFromRecordUsing(fn($record) => "{$record->educational_scientific_field} — {$record->scientific_professional_area} — {$record->title}")
+                        ->required(),
                     DatePicker::make('graduation_date')
                         ->label('Датум завршетка')
+                        ->required()
                         ->native(false),
                 ]),
         ]);

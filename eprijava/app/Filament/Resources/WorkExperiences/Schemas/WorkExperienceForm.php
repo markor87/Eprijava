@@ -34,9 +34,11 @@ class WorkExperienceForm
                         ->required(),
                     Textarea::make('job_description')
                         ->label('Опис посла')
+                        ->required()
                         ->rows(3),
                     Select::make('employment_basis')
                         ->label('Основ ангажовања')
+                        ->required()
                         ->options([
                             'fixed_term' => 'уговор о раду / решење о пријему у радни однос на одређено време',
                             'permanent'  => 'уговор о раду / решење о пријему у радни однос на неодређено време',
@@ -44,6 +46,7 @@ class WorkExperienceForm
                         ]),
                     CheckboxList::make('required_education')
                         ->label('Захтевано образовање')
+                        ->required()
                         ->helperText('Можете обележити више одговора ако су такви захтеви били одређени уговором о радном ангажовању')
                         ->options([
                             'high_school'  => 'средња школа/гимназија',

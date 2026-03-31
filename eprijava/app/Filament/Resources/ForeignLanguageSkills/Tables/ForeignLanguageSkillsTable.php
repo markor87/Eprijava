@@ -4,9 +4,7 @@ namespace App\Filament\Resources\ForeignLanguageSkills\Tables;
 
 use App\Filament\Resources\ForeignLanguageSkills\ForeignLanguageSkillResource;
 use App\Models\ForeignLanguageSkill;
-use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -42,10 +40,6 @@ class ForeignLanguageSkillsTable
                     ])),
                 DeleteAction::make(),
             ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->toolbarActions([]);
     }
 }

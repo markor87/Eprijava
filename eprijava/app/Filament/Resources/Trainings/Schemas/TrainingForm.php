@@ -25,6 +25,7 @@ class TrainingForm
                         ->required(),
                     DatePicker::make('exam_date')
                         ->label('Датум похађања')
+                        ->required()
                         ->native(false),
                     Select::make('exam_type')
                         ->label('Врста испита')
@@ -35,7 +36,8 @@ class TrainingForm
                         ])
                         ->required(),
                     TextInput::make('issuing_authority')
-                        ->label('Назив органа / правног лица које је издало доказ'),
+                        ->label('Назив органа / правног лица које је издало доказ')
+                        ->required(),
                 ]),
         ]);
     }
