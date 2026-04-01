@@ -16,6 +16,9 @@ class GovernmentBodiesTable
                 TextColumn::make('name')
                     ->label('Назив органа')
                     ->searchable(),
+                TextColumn::make('government_body_code')
+                    ->label('Шифра органа')
+                    ->searchable(),
             ])
             ->filters([])
             ->recordActions([

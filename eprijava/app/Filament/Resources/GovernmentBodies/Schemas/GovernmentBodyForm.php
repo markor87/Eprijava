@@ -17,6 +17,9 @@ class GovernmentBodyForm
                         ->label('Назив органа')
                         ->required()
                         ->columnSpanFull(),
+                    TextInput::make('government_body_code')
+                        ->label('Шифра органа')
+                        ->columnSpanFull(),
                 ]),
         ]);
     }

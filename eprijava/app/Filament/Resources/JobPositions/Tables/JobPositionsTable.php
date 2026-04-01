@@ -4,6 +4,8 @@ namespace App\Filament\Resources\JobPositions\Tables;
 
 use App\Mail\ApplicationSubmitted;
 use App\Models\Application;
+use App\Models\Competition;
+use App\Models\GovernmentBody;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -61,7 +63,20 @@ class JobPositionsTable
                         }
 
                         $record->loadMissing('rank');
-                        $candidate = $user->candidate;
+                        $candidate      = $user->candidate;
+                        $competition    = Competition::find($record->competition_id);
+                        $governmentBody = GovernmentBody::find($record->government_body_id);
+                        $appCount       = Application::where('job_position_id', $record->id)->count() + 1;
+
+                        $candidateCode =
+                            ($governmentBody?->government_body_code ?? '') .
+                            mb_substr($competition?->tip_konkursa ?? '', 0, 1) .
+                            ($competition?->datum_od?->format('dmy') ?? '') .
+                            ($record->sequence_number ?? '') .
+                            'И' .
+                            mb_substr($record->employment_type ?? '', 0, 1) .
+                            'Е' .
+                            $appCount;
 
                         Application::create([
                             'user_id'            => $user->id,
@@ -71,6 +86,7 @@ class JobPositionsTable
                             'first_name'         => $candidate?->first_name,
                             'last_name'          => $candidate?->last_name,
                             'national_id'        => $candidate?->national_id,
+                            'candidate_code'     => $candidateCode,
                             'org_unit_path'      => $record->org_unit_path,
                             'rank_name'          => $record->rank?->name,
                         ]);

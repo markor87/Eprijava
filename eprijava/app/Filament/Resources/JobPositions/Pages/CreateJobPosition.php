@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\JobPositions\Pages;
 
 use App\Filament\Resources\JobPositions\JobPositionResource;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateJobPosition extends CreateRecord
@@ -14,6 +15,18 @@ class CreateJobPosition extends CreateRecord
     public function mount(): void
     {
         $this->competitionId = (int) request()->query('competition_id');
+
+        if (!$this->competitionId) {
+            Notification::make()
+                ->title('Није одабран конкурс')
+                ->body('Отворите радна места преко странице конкурса.')
+                ->warning()
+                ->send();
+
+            $this->redirect(JobPositionResource::getUrl('index'));
+            return;
+        }
+
         parent::mount();
     }
 

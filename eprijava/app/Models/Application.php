@@ -15,6 +15,7 @@ class Application extends Model
         'first_name',
         'last_name',
         'national_id',
+        'candidate_code',
         'org_unit_path',
         'rank_name',
     ];

@@ -32,6 +32,10 @@ class ApplicationsTable
                 TextColumn::make('national_id')
                     ->label('ЈМБГ')
                     ->searchable(),
+                TextColumn::make('candidate_code')
+                    ->label('Шифра кандидата')
+                    ->searchable()
+                    ->copyable(),
                 TextColumn::make('rank_name')
                     ->label('Звање')
                     ->searchable(),

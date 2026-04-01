@@ -11,6 +11,7 @@ class GovernmentBody extends Model
 
     protected $fillable = [
         'name',
+        'government_body_code',
     ];
 
     public function users(): HasMany
