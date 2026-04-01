@@ -41,9 +41,17 @@ class CandidateForm
                         ->required(),
                     Select::make('place_of_birth_id')
                         ->label('Место рођења')
-                        ->options(
-                            Place::query()->orderBy('name')->get()
+                        ->getSearchResultsUsing(fn(string $search) =>
+                            Place::query()
+                                ->where('name', 'like', "%{$search}%")
+                                ->orderBy('name')
+                                ->limit(50)
+                                ->get()
                                 ->mapWithKeys(fn($p) => [$p->id => $p->name . ' (' . $p->municipality_name . ')'])
+                                ->toArray()
+                        )
+                        ->getOptionLabelUsing(fn($value) =>
+                            ($p = Place::find($value)) ? $p->name . ' (' . $p->municipality_name . ')' : $value
                         )
                         ->searchable()
                         ->required(),
@@ -64,9 +72,17 @@ class CandidateForm
                         ->required(),
                     Select::make('address_city')
                         ->label('Место')
-                        ->options(
-                            Place::query()->orderBy('name')->get()
+                        ->getSearchResultsUsing(fn(string $search) =>
+                            Place::query()
+                                ->where('name', 'like', "%{$search}%")
+                                ->orderBy('name')
+                                ->limit(50)
+                                ->get()
                                 ->mapWithKeys(fn($p) => [$p->id => $p->name . ' (' . $p->municipality_name . ')'])
+                                ->toArray()
+                        )
+                        ->getOptionLabelUsing(fn($value) =>
+                            ($p = Place::find($value)) ? $p->name . ' (' . $p->municipality_name . ')' : $value
                         )
                         ->searchable()
                         ->required(),
@@ -85,9 +101,17 @@ class CandidateForm
                         ->regex('/^[123]\d{4}$/'),
                     Select::make('delivery_city')
                         ->label('Место')
-                        ->options(
-                            Place::query()->orderBy('name')->get()
+                        ->getSearchResultsUsing(fn(string $search) =>
+                            Place::query()
+                                ->where('name', 'like', "%{$search}%")
+                                ->orderBy('name')
+                                ->limit(50)
+                                ->get()
                                 ->mapWithKeys(fn($p) => [$p->id => $p->name . ' (' . $p->municipality_name . ')'])
+                                ->toArray()
+                        )
+                        ->getOptionLabelUsing(fn($value) =>
+                            ($p = Place::find($value)) ? $p->name . ' (' . $p->municipality_name . ')' : $value
                         )
                         ->searchable(),
                     Textarea::make('other_delivery_methods')
@@ -104,6 +128,8 @@ class CandidateForm
                     TextInput::make('phone')
                         ->label('Телефон')
                         ->tel()
+                        ->regex('/^(\+381|0)[1-9][\d\s\-]{6,10}$/')
+                        ->helperText('Пример: 063 123 4567 или +381 63 123 4567')
                         ->required(),
                     TextInput::make('email')
                         ->label('Е-пошта')

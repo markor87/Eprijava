@@ -48,9 +48,17 @@ class HigherEducationForm
                         ->rule(new SerbianCyrillic()),
                     Select::make('institution_location_id')
                         ->label('Место')
-                        ->options(
-                            Place::query()->orderBy('name')->get()
+                        ->getSearchResultsUsing(fn(string $search) =>
+                            Place::query()
+                                ->where('name', 'like', "%{$search}%")
+                                ->orderBy('name')
+                                ->limit(50)
+                                ->get()
                                 ->mapWithKeys(fn($p) => [$p->id => $p->name . ' (' . $p->municipality_name . ')'])
+                                ->toArray()
+                        )
+                        ->getOptionLabelUsing(fn($value) =>
+                            ($p = Place::find($value)) ? $p->name . ' (' . $p->municipality_name . ')' : $value
                         )
                         ->searchable()
                         ->required(),

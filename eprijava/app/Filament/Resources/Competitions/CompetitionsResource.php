@@ -56,15 +56,7 @@ class CompetitionsResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        /** @var User|null $user */
-        $user = Auth::user();
-        $query = parent::getEloquentQuery();
-
-        if ($user && $user->hasRole('super_admin')) {
-            return $query;
-        }
-
-        return $query->where('user_id', $user?->id);
+        return parent::getEloquentQuery();
     }
 
     public static function canCreate(): bool
