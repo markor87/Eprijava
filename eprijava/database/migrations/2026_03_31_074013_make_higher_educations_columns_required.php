@@ -15,10 +15,10 @@ return new class extends Migration
             $table->string('study_type')->nullable(false)->change();
             $table->integer('volume_espb')->nullable(false)->change();
             $table->string('institution_name')->nullable(false)->change();
-            $table->unsignedBigInteger('institution_location_id')->nullable(false)->change();
             $table->string('program_name')->nullable(false)->change();
-            $table->unsignedBigInteger('title_id')->nullable(false)->change();
             $table->string('graduation_date')->nullable(false)->change();
+            // institution_location_id and title_id kept nullable — SET NULL FK constraint
+            // prevents making them NOT NULL on strict MariaDB/MySQL versions
         });
     }
 

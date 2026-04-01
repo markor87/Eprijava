@@ -84,7 +84,17 @@ class JobPositionsTable
                             ->send();
                     }),
                 EditAction::make(),
-                DeleteAction::make(),
+                DeleteAction::make()
+                    ->before(function ($record, $action) {
+                        if (Application::where('job_position_id', $record->id)->exists()) {
+                            Notification::make()
+                                ->title('Брисање није могуће')
+                                ->body('Радно место има поднете пријаве и не може бити обрисано.')
+                                ->danger()
+                                ->send();
+                            $action->halt();
+                        }
+                    }),
             ])
             ->toolbarActions([]);
     }

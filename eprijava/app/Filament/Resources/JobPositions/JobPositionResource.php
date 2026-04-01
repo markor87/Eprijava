@@ -44,14 +44,19 @@ class JobPositionResource extends Resource
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
         $query = parent::getEloquentQuery();
+        $path = request()->path();
 
-        // Only filter on the list page — edit/create pages use record ID in the path
-        $onListPage = !preg_match('#/job-positions/\d#', request()->path());
-
-        if (!$onListPage) {
+        // Livewire AJAX requests (actions, polling) — no filtering
+        if (str_contains($path, 'livewire')) {
             return $query;
         }
 
+        // Edit/create pages use record ID in the path — no filtering
+        if (preg_match('#/job-positions/\d#', $path)) {
+            return $query;
+        }
+
+        // List page — filter by competition_id from URL
         $competitionId = request()->query('competition_id');
 
         if (!$competitionId) {
