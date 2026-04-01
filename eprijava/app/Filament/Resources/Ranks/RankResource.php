@@ -47,13 +47,7 @@ class RankResource extends Resource
     public static function canAccess(): bool
     {
         $user = Auth::user();
-        return $user && ($user->hasRole('super_admin') || $user->canAny([
-            'ViewAny:Rank',
-            'View:Rank',
-            'Create:Rank',
-            'Update:Rank',
-            'Delete:Rank',
-        ]));
+        return $user && ($user->hasRole('super_admin') || $user->can('ViewAny:Rank'));
     }
 
     public static function getRelations(): array

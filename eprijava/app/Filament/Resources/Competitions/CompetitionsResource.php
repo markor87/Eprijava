@@ -51,13 +51,7 @@ class CompetitionsResource extends Resource
     {
         /** @var User|null $user */
         $user = Auth::user();
-        return $user && ($user->hasRole('super_admin') || $user->canAny([
-            'ViewAny:Competition',
-            'View:Competition',
-            'Create:Competition',
-            'Update:Competition',
-            'Delete:Competition',
-        ]));
+        return $user && ($user->hasRole('super_admin') || $user->can('ViewAny:Competition'));
     }
 
     public static function getEloquentQuery(): Builder
@@ -66,7 +60,7 @@ class CompetitionsResource extends Resource
         $user = Auth::user();
         $query = parent::getEloquentQuery();
 
-        if ($user && ($user->hasRole('super_admin') || $user->can('ViewAny:Competition'))) {
+        if ($user && $user->hasRole('super_admin')) {
             return $query;
         }
 

@@ -9,6 +9,7 @@ use App\Filament\Resources\JobPositions\Schemas\JobPositionForm;
 use App\Filament\Resources\JobPositions\Tables\JobPositionsTable;
 use App\Models\JobPosition;
 use Filament\Resources\Resource;
+use Illuminate\Support\Facades\Auth;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 
@@ -23,6 +24,12 @@ class JobPositionResource extends Resource
     protected static ?string $modelLabel = 'Радно место';
 
     protected static ?string $pluralModelLabel = 'Радна места';
+
+    public static function canAccess(): bool
+    {
+        $user = Auth::user();
+        return $user && ($user->hasRole('super_admin') || $user->can('ViewAny:JobPosition'));
+    }
 
     public static function form(Schema $schema): Schema
     {

@@ -47,13 +47,7 @@ class RequiredProofResource extends Resource
     public static function canAccess(): bool
     {
         $user = Auth::user();
-        return $user && ($user->hasRole('super_admin') || $user->canAny([
-            'ViewAny:RequiredProof',
-            'View:RequiredProof',
-            'Create:RequiredProof',
-            'Update:RequiredProof',
-            'Delete:RequiredProof',
-        ]));
+        return $user && ($user->hasRole('super_admin') || $user->can('ViewAny:RequiredProof'));
     }
 
     public static function getRelations(): array

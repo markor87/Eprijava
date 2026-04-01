@@ -48,13 +48,7 @@ class VacancySourceResource extends Resource
     public static function canAccess(): bool
     {
         $user = Auth::user();
-        return $user && ($user->hasRole('super_admin') || $user->canAny([
-            'ViewAny:VacancySource',
-            'View:VacancySource',
-            'Create:VacancySource',
-            'Update:VacancySource',
-            'Delete:VacancySource',
-        ]));
+        return $user && ($user->hasRole('super_admin') || $user->can('ViewAny:VacancySource'));
     }
 
     public static function getEloquentQuery(): Builder
@@ -62,7 +56,7 @@ class VacancySourceResource extends Resource
         $user = Auth::user();
         $query = parent::getEloquentQuery();
 
-        if ($user && ($user->hasRole('super_admin') || $user->can('ViewAny:VacancySource'))) {
+        if ($user && $user->hasRole('super_admin')) {
             return $query;
         }
 

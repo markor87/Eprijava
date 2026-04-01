@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\ForeignLanguageSkills\Tables;
 
-use App\Filament\Resources\ForeignLanguageSkills\ForeignLanguageSkillResource;
-use App\Models\ForeignLanguageSkill;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
@@ -15,29 +13,21 @@ class ForeignLanguageSkillsTable
     {
         return $table
             ->columns([
-                TextColumn::make('foreignLanguage.language_name')
-                    ->label('Страни језик')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('level')
-                    ->label('Ниво')
-                    ->placeholder('—'),
-                TextColumn::make('has_certificate')
-                    ->label('Сертификат')
-                    ->formatStateUsing(fn($state) => $state === null ? '—' : ($state ? 'Да' : 'Не')),
-                TextColumn::make('year_of_examination')
-                    ->label('Година полагања')
-                    ->placeholder('—'),
-                TextColumn::make('exemption_requested')
-                    ->label('Ослобађање тестирања')
-                    ->formatStateUsing(fn($state) => $state === null ? '—' : ($state ? 'Да' : 'Не')),
+                TextColumn::make('languages_entered')
+                    ->label('Унети језици')
+                    ->getStateUsing(fn($record) => $record->foreignLanguageSkills
+                        ->filter(fn($s) => $s->level !== null)
+                        ->map(fn($s) => $s->foreignLanguage?->language_name)
+                        ->filter()
+                        ->join(', ') ?: '—'
+                    ),
+                TextColumn::make('certificate_attachment')
+                    ->label('Сертификат приложен')
+                    ->getStateUsing(fn($record) => !empty($record->certificate_attachment) ? 'Да' : 'Не'),
             ])
             ->filters([])
             ->recordActions([
-                EditAction::make()
-                    ->url(fn(ForeignLanguageSkill $record) => ForeignLanguageSkillResource::getUrl('edit', [
-                        'record' => $record->foreign_language_skill_set_id,
-                    ])),
+                EditAction::make(),
                 DeleteAction::make(),
             ])
             ->toolbarActions([]);

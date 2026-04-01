@@ -47,13 +47,7 @@ class GovernmentBodyResource extends Resource
     public static function canAccess(): bool
     {
         $user = Auth::user();
-        return $user && ($user->hasRole('super_admin') || $user->canAny([
-            'ViewAny:GovernmentBody',
-            'View:GovernmentBody',
-            'Create:GovernmentBody',
-            'Update:GovernmentBody',
-            'Delete:GovernmentBody',
-        ]));
+        return $user && ($user->hasRole('super_admin') || $user->can('ViewAny:GovernmentBody'));
     }
 
     public static function getRelations(): array

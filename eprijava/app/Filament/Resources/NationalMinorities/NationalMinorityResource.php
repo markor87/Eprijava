@@ -47,13 +47,7 @@ class NationalMinorityResource extends Resource
     public static function canAccess(): bool
     {
         $user = Auth::user();
-        return $user && ($user->hasRole('super_admin') || $user->canAny([
-            'ViewAny:NationalMinority',
-            'View:NationalMinority',
-            'Create:NationalMinority',
-            'Update:NationalMinority',
-            'Delete:NationalMinority',
-        ]));
+        return $user && ($user->hasRole('super_admin') || $user->can('ViewAny:NationalMinority'));
     }
 
     public static function getRelations(): array

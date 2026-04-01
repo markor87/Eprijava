@@ -48,13 +48,7 @@ class TrainingResource extends Resource
     public static function canAccess(): bool
     {
         $user = Auth::user();
-        return $user && ($user->hasRole('super_admin') || $user->canAny([
-            'ViewAny:Training',
-            'View:Training',
-            'Create:Training',
-            'Update:Training',
-            'Delete:Training',
-        ]));
+        return $user && ($user->hasRole('super_admin') || $user->can('ViewAny:Training'));
     }
 
     public static function getEloquentQuery(): Builder
@@ -62,7 +56,7 @@ class TrainingResource extends Resource
         $user = Auth::user();
         $query = parent::getEloquentQuery();
 
-        if ($user && ($user->hasRole('super_admin') || $user->can('ViewAny:Training'))) {
+        if ($user && $user->hasRole('super_admin')) {
             return $query;
         }
 

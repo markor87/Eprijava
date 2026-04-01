@@ -41,7 +41,10 @@ class CandidateForm
                         ->required(),
                     Select::make('place_of_birth_id')
                         ->label('Место рођења')
-                        ->options(Place::query()->orderBy('name')->pluck('name', 'id'))
+                        ->options(
+                            Place::query()->orderBy('name')->get()
+                                ->mapWithKeys(fn($p) => [$p->id => $p->name . ' (' . $p->municipality_name . ')'])
+                        )
                         ->searchable()
                         ->required(),
                 ])
@@ -61,7 +64,10 @@ class CandidateForm
                         ->required(),
                     Select::make('address_city')
                         ->label('Место')
-                        ->options(Place::query()->orderBy('name')->pluck('name', 'id'))
+                        ->options(
+                            Place::query()->orderBy('name')->get()
+                                ->mapWithKeys(fn($p) => [$p->id => $p->name . ' (' . $p->municipality_name . ')'])
+                        )
                         ->searchable()
                         ->required(),
                 ])
@@ -79,7 +85,10 @@ class CandidateForm
                         ->regex('/^[123]\d{4}$/'),
                     Select::make('delivery_city')
                         ->label('Место')
-                        ->options(Place::query()->orderBy('name')->pluck('name', 'id'))
+                        ->options(
+                            Place::query()->orderBy('name')->get()
+                                ->mapWithKeys(fn($p) => [$p->id => $p->name . ' (' . $p->municipality_name . ')'])
+                        )
                         ->searchable(),
                     Textarea::make('other_delivery_methods')
                         ->label('Наведите податке за остале начине доставе обавештења')

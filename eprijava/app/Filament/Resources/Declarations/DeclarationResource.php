@@ -48,13 +48,7 @@ class DeclarationResource extends Resource
     public static function canAccess(): bool
     {
         $user = Auth::user();
-        return $user && ($user->hasRole('super_admin') || $user->canAny([
-            'ViewAny:Declaration',
-            'View:Declaration',
-            'Create:Declaration',
-            'Update:Declaration',
-            'Delete:Declaration',
-        ]));
+        return $user && ($user->hasRole('super_admin') || $user->can('ViewAny:Declaration'));
     }
 
     public static function getEloquentQuery(): Builder
@@ -62,7 +56,7 @@ class DeclarationResource extends Resource
         $user = Auth::user();
         $query = parent::getEloquentQuery();
 
-        if ($user && ($user->hasRole('super_admin') || $user->can('ViewAny:Declaration'))) {
+        if ($user && $user->hasRole('super_admin')) {
             return $query;
         }
 

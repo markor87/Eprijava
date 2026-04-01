@@ -12,8 +12,12 @@ class ForeignLanguageSkillSet extends Model
     protected static function booted(): void
     {
         static::updating(function (self $record) {
-            if ($record->isDirty('certificate_attachment') && $record->getOriginal('certificate_attachment')) {
-                foreach ((array) $record->getOriginal('certificate_attachment') as $file) {
+            if ($record->isDirty('certificate_attachment')) {
+                $removed = array_diff(
+                    (array) $record->getOriginal('certificate_attachment'),
+                    (array) $record->certificate_attachment
+                );
+                foreach ($removed as $file) {
                     Storage::disk('public')->delete($file);
                 }
             }

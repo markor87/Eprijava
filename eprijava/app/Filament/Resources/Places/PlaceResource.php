@@ -47,13 +47,7 @@ class PlaceResource extends Resource
     public static function canAccess(): bool
     {
         $user = Auth::user();
-        return $user && ($user->hasRole('super_admin') || $user->canAny([
-            'ViewAny:Place',
-            'View:Place',
-            'Create:Place',
-            'Update:Place',
-            'Delete:Place',
-        ]));
+        return $user && ($user->hasRole('super_admin') || $user->can('ViewAny:Place'));
     }
 
     public static function getRelations(): array

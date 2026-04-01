@@ -35,7 +35,7 @@ class AcademicTitleResource extends Resource
     public static function canAccess(): bool
     {
         $user = Auth::user();
-        return $user && $user->hasRole('super_admin');
+        return $user && ($user->hasRole('super_admin') || $user->can('ViewAny:AcademicTitle'));
     }
 
     public static function form(Schema $schema): Schema

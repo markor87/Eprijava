@@ -48,13 +48,7 @@ class ComputerSkillResource extends Resource
     public static function canAccess(): bool
     {
         $user = Auth::user();
-        return $user && ($user->hasRole('super_admin') || $user->canAny([
-            'ViewAny:ComputerSkill',
-            'View:ComputerSkill',
-            'Create:ComputerSkill',
-            'Update:ComputerSkill',
-            'Delete:ComputerSkill',
-        ]));
+        return $user && ($user->hasRole('super_admin') || $user->can('ViewAny:ComputerSkill'));
     }
 
     public static function getEloquentQuery(): Builder
@@ -62,7 +56,7 @@ class ComputerSkillResource extends Resource
         $user = Auth::user();
         $query = parent::getEloquentQuery();
 
-        if ($user && ($user->hasRole('super_admin') || $user->can('ViewAny:ComputerSkill'))) {
+        if ($user && $user->hasRole('super_admin')) {
             return $query;
         }
 

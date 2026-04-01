@@ -48,13 +48,7 @@ class WorkExperienceResource extends Resource
     public static function canAccess(): bool
     {
         $user = Auth::user();
-        return $user && ($user->hasRole('super_admin') || $user->canAny([
-            'ViewAny:WorkExperience',
-            'View:WorkExperience',
-            'Create:WorkExperience',
-            'Update:WorkExperience',
-            'Delete:WorkExperience',
-        ]));
+        return $user && ($user->hasRole('super_admin') || $user->can('ViewAny:WorkExperience'));
     }
 
     public static function getEloquentQuery(): Builder
@@ -62,7 +56,7 @@ class WorkExperienceResource extends Resource
         $user = Auth::user();
         $query = parent::getEloquentQuery();
 
-        if ($user && ($user->hasRole('super_admin') || $user->can('ViewAny:WorkExperience'))) {
+        if ($user && $user->hasRole('super_admin')) {
             return $query;
         }
 

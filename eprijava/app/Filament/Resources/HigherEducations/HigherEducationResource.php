@@ -48,13 +48,7 @@ class HigherEducationResource extends Resource
     public static function canAccess(): bool
     {
         $user = Auth::user();
-        return $user && ($user->hasRole('super_admin') || $user->canAny([
-            'ViewAny:HigherEducation',
-            'View:HigherEducation',
-            'Create:HigherEducation',
-            'Update:HigherEducation',
-            'Delete:HigherEducation',
-        ]));
+        return $user && ($user->hasRole('super_admin') || $user->can('ViewAny:HigherEducation'));
     }
 
     public static function getEloquentQuery(): Builder
@@ -62,7 +56,7 @@ class HigherEducationResource extends Resource
         $user = Auth::user();
         $query = parent::getEloquentQuery();
 
-        if ($user && ($user->hasRole('super_admin') || $user->can('ViewAny:HigherEducation'))) {
+        if ($user && $user->hasRole('super_admin')) {
             return $query;
         }
 

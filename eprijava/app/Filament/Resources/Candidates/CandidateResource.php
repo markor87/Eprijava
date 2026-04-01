@@ -46,13 +46,7 @@ class CandidateResource extends Resource
     public static function canAccess(): bool
     {
         $user = Auth::user();
-        return $user && ($user->hasRole('super_admin') || $user->canAny([
-            'ViewAny:Candidate',
-            'View:Candidate',
-            'Create:Candidate',
-            'Update:Candidate',
-            'Delete:Candidate',
-        ]));
+        return $user && ($user->hasRole('super_admin') || $user->can('ViewAny:Candidate'));
     }
 
     public static function getEloquentQuery(): Builder
@@ -60,7 +54,7 @@ class CandidateResource extends Resource
         $user = Auth::user();
         $query = parent::getEloquentQuery();
 
-        if ($user && ($user->hasRole('super_admin') || $user->can('ViewAny:Candidate'))) {
+        if ($user && $user->hasRole('super_admin')) {
             return $query;
         }
 

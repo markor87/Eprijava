@@ -47,13 +47,7 @@ class ForeignLanguageResource extends Resource
     public static function canAccess(): bool
     {
         $user = Auth::user();
-        return $user && ($user->hasRole('super_admin') || $user->canAny([
-            'ViewAny:ForeignLanguage',
-            'View:ForeignLanguage',
-            'Create:ForeignLanguage',
-            'Update:ForeignLanguage',
-            'Delete:ForeignLanguage',
-        ]));
+        return $user && ($user->hasRole('super_admin') || $user->can('ViewAny:ForeignLanguage'));
     }
 
     public static function getRelations(): array
