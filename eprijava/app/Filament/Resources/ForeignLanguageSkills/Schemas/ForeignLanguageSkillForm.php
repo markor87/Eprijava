@@ -44,19 +44,29 @@ class ForeignLanguageSkillForm
                                 ]),
                             Select::make('has_certificate')
                                 ->label('Поседујем сертификат')
-                                ->options([1 => 'Да', 0 => 'Не']),
+                                ->options([1 => 'Да', 0 => 'Не'])
+                                ->live()
+                                ->afterStateUpdated(fn($state, $set) => $state == 0 ? $set('exemption_requested', 0) : null),
                             TextInput::make('year_of_examination')
                                 ->label('Година полагања')
-                                ->numeric(),
+                                ->numeric()
+                                ->hidden(fn($get) => !$get('has_certificate')),
                             Select::make('exemption_requested')
                                 ->label('Прилажем сертификат ради ослобађања тестирања')
-                                ->options([1 => 'Да', 0 => 'Не']),
+                                ->options([1 => 'Да', 0 => 'Не'])
+                                ->disabled(fn($get) => !$get('has_certificate'))
+                                ->dehydrated()
+                                ->live(),
                         ]),
                     FileUpload::make('certificate_attachment')
                         ->label('Прилог сертификата')
                         ->multiple()
-                        ->disk('public')
-                        ->directory(fn() => 'certificate-attachments/' . auth()->user()?->id),
+                        ->disk('local')
+                        ->directory(fn() => 'certificate-attachments/' . auth()->user()?->id)
+                        ->downloadable()
+                        ->previewable(false)
+                        ->hidden(fn($get) => !collect($get('foreignLanguageSkills'))->contains(fn($row) => ($row['exemption_requested'] ?? 0) == 1))
+                        ->required(fn($get) => collect($get('foreignLanguageSkills'))->contains(fn($row) => ($row['exemption_requested'] ?? 0) == 1)),
                 ]),
         ]);
     }

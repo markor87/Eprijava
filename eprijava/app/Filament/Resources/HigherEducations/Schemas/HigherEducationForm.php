@@ -75,7 +75,8 @@ class HigherEducationForm
                     DatePicker::make('graduation_date')
                         ->label('Датум завршетка')
                         ->required()
-                        ->native(false),
+                        ->native(false)
+                        ->displayFormat('d.m.Y'),
                 ]),
         ]);
     }

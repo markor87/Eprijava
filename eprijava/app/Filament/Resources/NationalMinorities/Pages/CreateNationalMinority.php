@@ -8,4 +8,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateNationalMinority extends CreateRecord
 {
     protected static string $resource = NationalMinorityResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return static::getResource()::getUrl('index');
+    }
 }

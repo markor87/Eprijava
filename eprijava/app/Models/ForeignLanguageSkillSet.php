@@ -18,14 +18,14 @@ class ForeignLanguageSkillSet extends Model
                     (array) $record->certificate_attachment
                 );
                 foreach ($removed as $file) {
-                    Storage::disk('public')->delete($file);
+                    Storage::disk('local')->delete($file);
                 }
             }
         });
 
         static::deleting(function (self $record) {
             foreach ((array) $record->certificate_attachment as $file) {
-                Storage::disk('public')->delete($file);
+                Storage::disk('local')->delete($file);
             }
         });
     }

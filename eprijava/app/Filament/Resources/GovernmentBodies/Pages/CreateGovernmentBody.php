@@ -8,4 +8,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateGovernmentBody extends CreateRecord
 {
     protected static string $resource = GovernmentBodyResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return static::getResource()::getUrl('index');
+    }
 }

@@ -62,7 +62,7 @@ class JobPositionsTable
                             return;
                         }
 
-                        $record->loadMissing('rank');
+                        $record->loadMissing('rank', 'workLocation');
                         $candidate      = $user->candidate;
                         $competition    = Competition::find($record->competition_id);
                         $governmentBody = GovernmentBody::find($record->government_body_id);
@@ -91,7 +91,14 @@ class JobPositionsTable
                             'rank_name'          => $record->rank?->name,
                         ]);
 
-                        Mail::to($user->email)->send(new ApplicationSubmitted($user, $record));
+                        $application = Application::where('user_id', $user->id)
+                            ->where('job_position_id', $record->id)
+                            ->first();
+
+                        $record->setRelation('competition', $competition);
+                        $record->setRelation('governmentBody', $governmentBody);
+
+                        Mail::to($candidate?->email ?? $user->email)->send(new ApplicationSubmitted($user, $record, $application));
 
                         Notification::make()
                             ->title('Пријава је успешно поднета')

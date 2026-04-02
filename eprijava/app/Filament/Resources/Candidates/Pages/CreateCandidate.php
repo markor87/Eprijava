@@ -20,6 +20,10 @@ class CreateCandidate extends CreateRecord
         }
 
         parent::mount();
+
+        $this->form->fill([
+            'email' => auth()->user()->email,
+        ]);
     }
 
     protected function mutateFormDataBeforeCreate(array $data): array

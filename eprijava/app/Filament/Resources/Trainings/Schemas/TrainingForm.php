@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Trainings\Schemas;
 
+use App\Rules\SerbianCyrillic;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -26,7 +27,8 @@ class TrainingForm
                     DatePicker::make('exam_date')
                         ->label('Датум похађања')
                         ->required()
-                        ->native(false),
+                        ->native(false)
+                        ->displayFormat('d.m.Y'),
                     Select::make('exam_type')
                         ->label('Врста испита')
                         ->options([
@@ -37,6 +39,7 @@ class TrainingForm
                         ->required(),
                     TextInput::make('issuing_authority')
                         ->label('Назив органа / правног лица које је издало доказ')
+                        ->rule(new SerbianCyrillic())
                         ->required(),
                 ]),
         ]);

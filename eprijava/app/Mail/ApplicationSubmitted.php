@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Application;
 use App\Models\JobPosition;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
@@ -17,6 +18,7 @@ class ApplicationSubmitted extends Mailable
     public function __construct(
         public User $user,
         public JobPosition $jobPosition,
+        public ?Application $application = null,
     ) {}
 
     public function envelope(): Envelope

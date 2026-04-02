@@ -8,4 +8,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateRequiredProof extends CreateRecord
 {
     protected static string $resource = RequiredProofResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return static::getResource()::getUrl('index');
+    }
 }

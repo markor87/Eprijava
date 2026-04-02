@@ -8,4 +8,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateRank extends CreateRecord
 {
     protected static string $resource = RankResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return static::getResource()::getUrl('index');
+    }
 }

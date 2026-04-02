@@ -46,7 +46,7 @@ class ComputerSkill extends Model
         static::updating(function (self $record) use ($attachmentColumns) {
             foreach ($attachmentColumns as $col) {
                 if ($record->isDirty($col) && $record->getOriginal($col)) {
-                    Storage::disk('public')->delete($record->getOriginal($col));
+                    Storage::disk('local')->delete($record->getOriginal($col));
                 }
             }
         });
@@ -54,7 +54,7 @@ class ComputerSkill extends Model
         static::deleting(function (self $record) use ($attachmentColumns) {
             foreach ($attachmentColumns as $col) {
                 if ($record->$col) {
-                    Storage::disk('public')->delete($record->$col);
+                    Storage::disk('local')->delete($record->$col);
                 }
             }
         });

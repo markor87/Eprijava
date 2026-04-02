@@ -34,6 +34,7 @@ class HigherEducationsTable
                     ->placeholder('—'),
                 TextColumn::make('graduation_date')
                     ->label('Датум завршетка')
+                    ->date('d.m.Y')
                     ->placeholder('—'),
             ])
             ->filters([])

@@ -29,10 +29,12 @@ class CompetitionForm
                     DatePicker::make('datum_od')
                         ->label('Датум од')
                         ->native(false)
+                        ->displayFormat('d.m.Y')
                         ->required(),
                     DatePicker::make('datum_do')
                         ->label('Датум до')
                         ->native(false)
+                        ->displayFormat('d.m.Y')
                         ->required(),
                 ]),
         ]);

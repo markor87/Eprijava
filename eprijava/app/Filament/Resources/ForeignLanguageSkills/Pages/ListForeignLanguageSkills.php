@@ -14,8 +14,6 @@ class ListForeignLanguageSkills extends ListRecords
 
     public function mount(): void
     {
-        ForeignLanguageSkillSet::firstOrCreate(['user_id' => Auth::id()]);
-
         parent::mount();
     }
 
@@ -27,12 +25,23 @@ class ListForeignLanguageSkills extends ListRecords
             return [];
         }
 
-        $set = ForeignLanguageSkillSet::firstOrCreate(['user_id' => Auth::id()]);
+        $set = ForeignLanguageSkillSet::where('user_id', Auth::id())->first();
+
+        if ($set) {
+            return [
+                Action::make('edit_my_skills')
+                    ->label('Додај страни језик')
+                    ->url(ForeignLanguageSkillResource::getUrl('edit', ['record' => $set->id])),
+            ];
+        }
 
         return [
             Action::make('edit_my_skills')
                 ->label('Додај страни језик')
-                ->url(ForeignLanguageSkillResource::getUrl('edit', ['record' => $set->id])),
+                ->action(function () {
+                    $set = ForeignLanguageSkillSet::create(['user_id' => Auth::id()]);
+                    $this->redirect(ForeignLanguageSkillResource::getUrl('edit', ['record' => $set->id]));
+                }),
         ];
     }
 }

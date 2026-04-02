@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\WorkExperiences\Schemas;
 
+use App\Rules\SerbianCyrillic;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
@@ -21,19 +22,24 @@ class WorkExperienceForm
                     DatePicker::make('period_from')
                         ->label('Период од')
                         ->required()
-                        ->native(false),
+                        ->native(false)
+                        ->displayFormat('d.m.Y'),
                     DatePicker::make('period_to')
                         ->label('Период до')
                         ->helperText('Оставите празно ако је тренутно радно место')
-                        ->native(false),
+                        ->native(false)
+                        ->displayFormat('d.m.Y'),
                     TextInput::make('employer_name')
                         ->label('Назив послодавца')
+                        ->rule(new SerbianCyrillic())
                         ->required(),
                     TextInput::make('job_title')
                         ->label('Назив радног места')
+                        ->rule(new SerbianCyrillic())
                         ->required(),
                     Textarea::make('job_description')
                         ->label('Опис посла')
+                        ->rule(new SerbianCyrillic())
                         ->required()
                         ->rows(3),
                     Select::make('employment_basis')
