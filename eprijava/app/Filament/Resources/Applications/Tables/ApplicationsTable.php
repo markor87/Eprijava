@@ -2,8 +2,14 @@
 
 namespace App\Filament\Resources\Applications\Tables;
 
+use App\Models\Application;
+use App\Models\ForeignLanguageSkillSet;
+use App\Models\Training;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Support\Icons\Heroicon;
+use Filament\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -46,6 +52,40 @@ class ApplicationsTable
             ])
             ->filters([])
             ->recordActions([
+                Action::make('download_pdf')
+                    ->label('Преузми PDF')
+                    ->icon(Heroicon::OutlinedArrowDownTray)
+                    ->action(function (Application $record) {
+                        $user = $record->user;
+
+                        $pdf = Pdf::loadView('pdf.application', [
+                            'record'              => $record->load(['jobPosition', 'competition', 'governmentBody']),
+                            'candidate'           => $user->candidate?->load(['placeOfBirth', 'addressCity', 'deliveryCity']),
+                            'highSchoolEducation' => $user->highSchoolEducations()->first(),
+                            'higherEducations'    => $user->higherEducations()->with(['academicTitle', 'institutionLocation'])->get(),
+                            'workExperiences'     => $user->workExperiences()->orderByDesc('period_from')->get(),
+                            'trainings'           => Training::where('user_id', $user->id)->orderBy('exam_date')->get(),
+                            'foreignSkillSet'     => ForeignLanguageSkillSet::where('user_id', $user->id)
+                                                        ->with('foreignLanguageSkills.foreignLanguage')
+                                                        ->first(),
+                            'computerSkill'       => $user->computerSkill,
+                            'additionalTrainings' => $user->additionalTrainings()->orderBy('year')->get(),
+                            'declaration'         => $user->declaration?->load([
+                                                        'declarationProofs.requiredProof',
+                                                        'declarationMinorities.nationalMinority',
+                                                    ]),
+                            'vacancySource'       => $user->vacancySource,
+                        ])->setPaper('a4', 'portrait');
+
+                        $filename = implode('_', array_filter([
+                            $record->first_name,
+                            $record->last_name,
+                            $record->national_id,
+                            $record->candidate_code,
+                        ])) . '.pdf';
+
+                        return response()->streamDownload(fn() => print($pdf->output()), $filename);
+                    }),
                 EditAction::make(),
                 DeleteAction::make(),
             ])
