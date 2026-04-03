@@ -24,11 +24,11 @@ class CompetitionsTable
                     ->sortable(),
                 TextColumn::make('datum_od')
                     ->label('Датум од')
-                    ->date()
+                    ->date('d.m.Y')
                     ->sortable(),
                 TextColumn::make('datum_do')
                     ->label('Датум до')
-                    ->date()
+                    ->date('d.m.Y')
                     ->sortable(),
             ])
             ->filters([])
