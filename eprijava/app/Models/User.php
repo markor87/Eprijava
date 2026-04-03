@@ -10,12 +10,20 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Filament\Auth\MultiFactor\Email\Concerns\InteractsWithEmailAuthentication;
+use Filament\Auth\MultiFactor\Email\Contracts\HasEmailAuthentication;
+use Filament\Models\Contracts\HasName;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements HasEmailAuthentication, HasName
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, InteractsWithEmailAuthentication;
+
+    public function getFilamentName(): string
+    {
+        return $this->name ?? $this->email;
+    }
 
     public function candidate(): HasOne
     {
@@ -77,6 +85,7 @@ class User extends Authenticatable
         'government_body_id',
         'email',
         'password',
+        'has_email_authentication',
     ];
 
     public function governmentBody(): BelongsTo

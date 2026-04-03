@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use Filament\Auth\MultiFactor\Email\EmailAuthentication;
 use Filament\Http\Middleware\Authenticate;
 use Illuminate\Support\Facades\Auth;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
@@ -32,6 +33,10 @@ class AdminPanelProvider extends PanelProvider
             ->id('app')
             ->path('app')
             ->login()
+            ->registration(\App\Filament\Pages\Auth\Register::class)
+            ->multiFactorAuthentication([
+                EmailAuthentication::make()->codeExpiryMinutes(10),
+            ], isRequired: true)
             ->colors([
                 'primary' => Color::Amber,
             ])
