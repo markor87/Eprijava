@@ -14,7 +14,9 @@ use App\Models\HigherEducation;
 use App\Models\HighSchoolEducation;
 use App\Models\NationalMinority;
 use App\Models\RequiredProof;
+use App\Models\ExamType;
 use App\Models\Training;
+use App\Models\TrainingSet;
 use App\Models\User;
 use App\Models\VacancySource;
 use App\Models\WorkExperience;
@@ -267,44 +269,48 @@ class ProfileSeeder extends Seeder
 
     private function seedTrainings(User $user): void
     {
-        if (Training::where('user_id', $user->id)->exists()) {
+        if (TrainingSet::where('user_id', $user->id)->exists()) {
             return;
         }
+
+        $set = TrainingSet::create(['user_id' => $user->id]);
+
+        $typeId = fn(string $name) => ExamType::where('name', $name)->value('id');
 
         $records = [
             1 => [
                 [
-                    'has_certificate'    => true,
-                    'exam_type'          => 'Државни стручни испит',
-                    'issuing_authority'  => 'Министарство државне управе и локалне самоуправе',
-                    'exam_date'          => '2010-04-22',
+                    'exam_type_id'      => $typeId('Државни стручни испит'),
+                    'has_certificate'   => true,
+                    'issuing_authority' => 'Министарство државне управе и локалне самоуправе',
+                    'exam_date'         => '2010-04-22',
                 ],
             ],
             2 => [
                 [
-                    'has_certificate'    => true,
-                    'exam_type'          => 'Државни стручни испит',
-                    'issuing_authority'  => 'Министарство државне управе и локалне самоуправе',
-                    'exam_date'          => '2014-11-18',
+                    'exam_type_id'      => $typeId('Државни стручни испит'),
+                    'has_certificate'   => true,
+                    'issuing_authority' => 'Министарство државне управе и локалне самоуправе',
+                    'exam_date'         => '2014-11-18',
                 ],
                 [
-                    'has_certificate'    => true,
-                    'exam_type'          => 'Правосудни испит',
-                    'issuing_authority'  => 'Министарство правде',
-                    'exam_date'          => '2013-06-05',
+                    'exam_type_id'      => $typeId('Правосудни испит'),
+                    'has_certificate'   => true,
+                    'issuing_authority' => 'Министарство правде',
+                    'exam_date'         => '2013-06-05',
                 ],
             ],
         ];
 
         $list = $records[$user->id] ?? [[
+            'exam_type_id'      => $typeId('Државни стручни испит'),
             'has_certificate'   => true,
-            'exam_type'         => 'Државни стручни испит',
             'issuing_authority' => 'Министарство државне управе и локалне самоуправе',
             'exam_date'         => '2016-05-10',
         ]];
 
         foreach ($list as $data) {
-            Training::create(array_merge(['user_id' => $user->id], $data));
+            $set->trainings()->create($data);
         }
     }
 

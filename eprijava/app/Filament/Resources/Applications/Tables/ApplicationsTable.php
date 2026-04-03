@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Applications\Tables;
 
 use App\Models\Application;
 use App\Models\ForeignLanguageSkillSet;
-use App\Models\Training;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -64,7 +63,7 @@ class ApplicationsTable
                             'highSchoolEducation' => $user->highSchoolEducations()->first(),
                             'higherEducations'    => $user->higherEducations()->with(['academicTitle', 'institutionLocation'])->get(),
                             'workExperiences'     => $user->workExperiences()->orderByDesc('period_from')->get(),
-                            'trainings'           => Training::where('user_id', $user->id)->orderBy('exam_date')->get(),
+                            'trainings'           => $user->trainingSet?->trainings()->with('examType')->orderBy('exam_date')->get() ?? collect(),
                             'foreignSkillSet'     => ForeignLanguageSkillSet::where('user_id', $user->id)
                                                         ->with('foreignLanguageSkills.foreignLanguage')
                                                         ->first(),

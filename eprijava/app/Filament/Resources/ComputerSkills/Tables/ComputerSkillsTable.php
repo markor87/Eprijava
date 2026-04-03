@@ -13,24 +13,20 @@ class ComputerSkillsTable
     {
         return $table
             ->columns([
-                TextColumn::make('word_has_certificate')
-                    ->label('Word')
-                    ->formatStateUsing(fn($state) => $state ? 'Да' : 'Не'),
-                TextColumn::make('excel_has_certificate')
-                    ->label('Excel')
-                    ->formatStateUsing(fn($state) => $state ? 'Да' : 'Не'),
-                TextColumn::make('internet_has_certificate')
-                    ->label('Internet')
-                    ->formatStateUsing(fn($state) => $state ? 'Да' : 'Не'),
-                TextColumn::make('word_exemption_requested')
-                    ->label('Word – ослобађање')
-                    ->formatStateUsing(fn($state) => $state ? 'Да' : 'Не'),
-                TextColumn::make('excel_exemption_requested')
-                    ->label('Excel – ослобађање')
-                    ->formatStateUsing(fn($state) => $state ? 'Да' : 'Не'),
-                TextColumn::make('internet_exemption_requested')
-                    ->label('Internet – ослобађање')
-                    ->formatStateUsing(fn($state) => $state ? 'Да' : 'Не'),
+                TextColumn::make('computer_skills_summary')
+                    ->label('Сертификат')
+                    ->getStateUsing(fn($record) => collect([
+                        'Word'     => $record->word_has_certificate,
+                        'Excel'    => $record->excel_has_certificate,
+                        'Internet' => $record->internet_has_certificate,
+                    ])->map(fn($val, $name) => $name . ': ' . ($val ? 'Да' : 'Не'))->join(', ')),
+                TextColumn::make('exemptions_summary')
+                    ->label('Ослобађање')
+                    ->getStateUsing(fn($record) => collect([
+                        'Word'     => $record->word_exemption_requested,
+                        'Excel'    => $record->excel_exemption_requested,
+                        'Internet' => $record->internet_exemption_requested,
+                    ])->map(fn($val, $name) => $name . ': ' . ($val ? 'Да' : 'Не'))->join(', ')),
             ])
             ->filters([])
             ->recordActions([

@@ -21,7 +21,12 @@ class ComputerSkillForm
                         ->options([1 => 'Да', 0 => 'Не'])
                         ->required()
                         ->live()
-                        ->afterStateUpdated(fn($state, $set) => $state == 0 ? $set('word_exemption_requested', 0) : null),
+                        ->afterStateUpdated(function ($state, $set) {
+                            if ($state == 0) {
+                                $set('word_certificate_year', null);
+                                $set('word_exemption_requested', 0);
+                            }
+                        }),
                     TextInput::make('word_certificate_year')
                         ->label('Година стицања сертификата / другог доказа')
                         ->numeric()
@@ -52,7 +57,12 @@ class ComputerSkillForm
                         ->options([1 => 'Да', 0 => 'Не'])
                         ->required()
                         ->live()
-                        ->afterStateUpdated(fn($state, $set) => $state == 0 ? $set('excel_exemption_requested', 0) : null),
+                        ->afterStateUpdated(function ($state, $set) {
+                            if ($state == 0) {
+                                $set('excel_certificate_year', null);
+                                $set('excel_exemption_requested', 0);
+                            }
+                        }),
                     TextInput::make('excel_certificate_year')
                         ->label('Година стицања сертификата / другог доказа')
                         ->numeric()
@@ -83,7 +93,12 @@ class ComputerSkillForm
                         ->options([1 => 'Да', 0 => 'Не'])
                         ->required()
                         ->live()
-                        ->afterStateUpdated(fn($state, $set) => $state == 0 ? $set('internet_exemption_requested', 0) : null),
+                        ->afterStateUpdated(function ($state, $set) {
+                            if ($state == 0) {
+                                $set('internet_certificate_year', null);
+                                $set('internet_exemption_requested', 0);
+                            }
+                        }),
                     TextInput::make('internet_certificate_year')
                         ->label('Година стицања сертификата / другог доказа')
                         ->numeric()

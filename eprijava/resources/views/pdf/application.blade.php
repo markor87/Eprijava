@@ -330,7 +330,7 @@ $sourceLabels = [
     </tr>
     @foreach($trainings as $t)
     <tr>
-        <td>{{ $t->exam_type }}</td>
+        <td>{{ $t->examType?->name ?? '—' }}</td>
         <td>{{ $t->has_certificate ? 'Да' : 'Не' }}</td>
         <td>{{ $t->issuing_authority ?? '—' }}</td>
         <td>{{ $fmt($t->exam_date) }}</td>

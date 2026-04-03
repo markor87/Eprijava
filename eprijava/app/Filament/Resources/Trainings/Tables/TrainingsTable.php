@@ -13,21 +13,13 @@ class TrainingsTable
     {
         return $table
             ->columns([
-                TextColumn::make('exam_type')
-                    ->label('Врста испита')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('issuing_authority')
-                    ->label('Орган / правно лице')
-                    ->searchable()
-                    ->placeholder('—'),
-                TextColumn::make('exam_date')
-                    ->label('Датум похађања')
-                    ->date('d.m.Y.')
-                    ->placeholder('—'),
-                TextColumn::make('has_certificate')
-                    ->label('Сертификат')
-                    ->formatStateUsing(fn($state) => $state ? 'Да' : 'Не'),
+                TextColumn::make('exams_entered')
+                    ->label('Унети испити')
+                    ->getStateUsing(fn($record) => $record->trainings
+                        ->filter(fn($t) => $t->has_certificate !== null)
+                        ->map(fn($t) => ($t->examType?->name ?? '—') . ': ' . ($t->has_certificate ? 'Да' : 'Не'))
+                        ->join(', ') ?: '—'
+                    ),
             ])
             ->filters([])
             ->recordActions([

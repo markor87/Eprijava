@@ -14,6 +14,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\RateLimiter;
 
 class JobPositionsTable
 {
@@ -48,6 +49,23 @@ class JobPositionsTable
                     ->modalSubmitActionLabel('Пријави се')
                     ->action(function ($record) {
                         $user = Auth::user();
+
+                        $rateLimitKey = 'apply:' . $user->id;
+
+                        if (RateLimiter::tooManyAttempts($rateLimitKey, 1)) {
+                            $seconds = RateLimiter::availableIn($rateLimitKey);
+                            $mod100  = $seconds % 100;
+                            $mod10   = $seconds % 10;
+                            $form    = ($mod100 >= 11 && $mod100 <= 19) ? 'секунди'
+                                     : (($mod10 === 1) ? 'секунду'
+                                     : (($mod10 >= 2 && $mod10 <= 4) ? 'секунде' : 'секунди'));
+                            Notification::make()
+                                ->title('Сачекајте тренутак')
+                                ->body("Молимо вас сачекајте {$seconds} {$form} пре следеће пријаве.")
+                                ->warning()
+                                ->send();
+                            return;
+                        }
 
                         $alreadyApplied = Application::where('user_id', $user->id)
                             ->where('job_position_id', $record->id)
@@ -90,6 +108,8 @@ class JobPositionsTable
                             'org_unit_path'      => $record->org_unit_path,
                             'rank_name'          => $record->rank?->name,
                         ]);
+
+                        RateLimiter::hit($rateLimitKey, 30);
 
                         $application = Application::where('user_id', $user->id)
                             ->where('job_position_id', $record->id)

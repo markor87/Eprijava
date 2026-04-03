@@ -13,17 +13,13 @@ class ForeignLanguageSkillsTable
     {
         return $table
             ->columns([
-                TextColumn::make('languages_entered')
+                TextColumn::make('languages_summary')
                     ->label('Унети језици')
                     ->getStateUsing(fn($record) => $record->foreignLanguageSkills
-                        ->filter(fn($s) => $s->level !== null)
-                        ->map(fn($s) => $s->foreignLanguage?->language_name)
-                        ->filter()
+                        ->filter(fn($s) => $s->has_certificate !== null)
+                        ->map(fn($s) => ($s->foreignLanguage?->language_name ?? '—') . ': ' . ($s->has_certificate ? 'Да' : 'Не'))
                         ->join(', ') ?: '—'
                     ),
-                TextColumn::make('certificate_attachment')
-                    ->label('Сертификат приложен')
-                    ->getStateUsing(fn($record) => !empty($record->certificate_attachment) ? 'Да' : 'Не'),
             ])
             ->filters([])
             ->recordActions([

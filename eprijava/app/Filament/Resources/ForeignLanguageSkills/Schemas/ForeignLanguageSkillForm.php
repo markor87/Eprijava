@@ -46,7 +46,12 @@ class ForeignLanguageSkillForm
                                 ->label('Поседујем сертификат')
                                 ->options([1 => 'Да', 0 => 'Не'])
                                 ->live()
-                                ->afterStateUpdated(fn($state, $set) => $state == 0 ? $set('exemption_requested', 0) : null),
+                                ->afterStateUpdated(function ($state, $set) {
+                                    if ($state == 0) {
+                                        $set('year_of_examination', null);
+                                        $set('exemption_requested', 0);
+                                    }
+                                }),
                             TextInput::make('year_of_examination')
                                 ->label('Година полагања')
                                 ->numeric()

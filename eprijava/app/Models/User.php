@@ -62,6 +62,11 @@ class User extends Authenticatable
         return $this->hasOne(Declaration::class);
     }
 
+    public function trainingSet(): HasOne
+    {
+        return $this->hasOne(TrainingSet::class);
+    }
+
     /**
      * The attributes that are mass assignable.
      *

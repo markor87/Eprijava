@@ -10,9 +10,9 @@ class Training extends Model
     protected $table = 'trainings';
 
     protected $fillable = [
-        'user_id',
+        'training_set_id',
+        'exam_type_id',
         'has_certificate',
-        'exam_type',
         'issuing_authority',
         'exam_date',
     ];
@@ -22,8 +22,13 @@ class Training extends Model
         'exam_date'       => 'date',
     ];
 
-    public function user(): BelongsTo
+    public function trainingSet(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(TrainingSet::class);
+    }
+
+    public function examType(): BelongsTo
+    {
+        return $this->belongsTo(ExamType::class);
     }
 }

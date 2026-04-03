@@ -2,12 +2,11 @@
 
 namespace App\Filament\Resources\Trainings;
 
-use App\Filament\Resources\Trainings\Pages\CreateTraining;
 use App\Filament\Resources\Trainings\Pages\EditTraining;
 use App\Filament\Resources\Trainings\Pages\ListTrainings;
 use App\Filament\Resources\Trainings\Schemas\TrainingForm;
 use App\Filament\Resources\Trainings\Tables\TrainingsTable;
-use App\Models\Training;
+use App\Models\TrainingSet;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,7 +18,7 @@ use UnitEnum;
 
 class TrainingResource extends Resource
 {
-    protected static ?string $model = Training::class;
+    protected static ?string $model = TrainingSet::class;
 
     protected static ?string $slug = 'trainings';
 
@@ -48,7 +47,7 @@ class TrainingResource extends Resource
     public static function canAccess(): bool
     {
         $user = Auth::user();
-        return $user && ($user->hasRole('super_admin') || $user->can('ViewAny:Training'));
+        return $user && ($user->hasRole('super_admin') || $user->can('ViewAny:TrainingSet'));
     }
 
     public static function getEloquentQuery(): Builder
@@ -71,9 +70,8 @@ class TrainingResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => ListTrainings::route('/'),
-            'create' => CreateTraining::route('/create'),
-            'edit'   => EditTraining::route('/{record}/edit'),
+            'index' => ListTrainings::route('/'),
+            'edit'  => EditTraining::route('/{record}/edit'),
         ];
     }
 }
