@@ -8,4 +8,9 @@ use Filament\Resources\Pages\EditRecord;
 class EditHighSchoolEducation extends EditRecord
 {
     protected static string $resource = HighSchoolEducationResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return static::getResource()::getUrl('index');
+    }
 }

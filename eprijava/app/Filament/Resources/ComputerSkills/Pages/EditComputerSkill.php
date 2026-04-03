@@ -8,4 +8,9 @@ use Filament\Resources\Pages\EditRecord;
 class EditComputerSkill extends EditRecord
 {
     protected static string $resource = ComputerSkillResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return static::getResource()::getUrl('index');
+    }
 }

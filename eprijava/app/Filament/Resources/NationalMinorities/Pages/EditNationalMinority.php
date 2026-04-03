@@ -8,4 +8,9 @@ use Filament\Resources\Pages\EditRecord;
 class EditNationalMinority extends EditRecord
 {
     protected static string $resource = NationalMinorityResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return static::getResource()::getUrl('index');
+    }
 }
