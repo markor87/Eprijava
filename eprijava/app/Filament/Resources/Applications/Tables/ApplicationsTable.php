@@ -57,24 +57,33 @@ class ApplicationsTable
                     ->action(function (Application $record) {
                         $user = $record->user;
 
-                        $pdf = Pdf::loadView('pdf.application', [
-                            'record'              => $record->load(['jobPosition', 'competition', 'governmentBody']),
-                            'candidate'           => $user->candidate?->load(['placeOfBirth', 'addressCity', 'deliveryCity']),
-                            'highSchoolEducation' => $user->highSchoolEducations()->first(),
-                            'higherEducations'    => $user->higherEducations()->with(['academicTitle', 'institutionLocation'])->get(),
-                            'workExperiences'     => $user->workExperiences()->orderByDesc('period_from')->get(),
-                            'trainings'           => $user->trainingSet?->trainings()->with('examType')->orderBy('exam_date')->get() ?? collect(),
-                            'foreignSkillSet'     => ForeignLanguageSkillSet::where('user_id', $user->id)
-                                                        ->with('foreignLanguageSkills.foreignLanguage')
-                                                        ->first(),
-                            'computerSkill'       => $user->computerSkill,
-                            'additionalTrainings' => $user->additionalTrainings()->orderBy('year')->get(),
-                            'declaration'         => $user->declaration?->load([
-                                                        'declarationProofs.requiredProof',
-                                                        'declarationMinorities.nationalMinority',
-                                                    ]),
-                            'vacancySource'       => $user->vacancySource,
-                        ])->setPaper('a4', 'portrait');
+                        if ($record->profile_snapshot !== null) {
+                            $profileData = $record->hydrateSnapshotForPdf();
+                        } else {
+                            // Legacy fallback for applications submitted before snapshot was introduced
+                            $profileData = [
+                                'candidate'           => $user->candidate?->load(['placeOfBirth', 'addressCity', 'deliveryCity']),
+                                'highSchoolEducation' => $user->highSchoolEducations()->first(),
+                                'higherEducations'    => $user->higherEducations()->with(['academicTitle', 'institutionLocation'])->get(),
+                                'workExperiences'     => $user->workExperiences()->orderByDesc('period_from')->get(),
+                                'trainings'           => $user->trainingSet?->trainings()->with('examType')->orderBy('exam_date')->get() ?? collect(),
+                                'foreignSkillSet'     => ForeignLanguageSkillSet::where('user_id', $user->id)
+                                                            ->with('foreignLanguageSkills.foreignLanguage')
+                                                            ->first(),
+                                'computerSkill'       => $user->computerSkill,
+                                'additionalTrainings' => $user->additionalTrainings()->orderBy('year')->get(),
+                                'declaration'         => $user->declaration?->load([
+                                                            'declarationProofs.requiredProof',
+                                                            'declarationMinorities.nationalMinority',
+                                                        ]),
+                                'vacancySource'       => $user->vacancySource,
+                            ];
+                        }
+
+                        $pdf = Pdf::loadView('pdf.application', array_merge(
+                            ['record' => $record->load(['jobPosition', 'competition', 'governmentBody'])],
+                            $profileData
+                        ))->setPaper('a4', 'portrait');
 
                         $filename = implode('_', array_filter([
                             $record->first_name,

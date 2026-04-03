@@ -45,7 +45,8 @@ class CreateApplication extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['user_id'] = auth()->id();
+        $data['user_id']          = auth()->id();
+        $data['profile_snapshot'] = Application::buildProfileSnapshot(Auth::user());
         return $data;
     }
 }

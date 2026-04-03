@@ -107,6 +107,7 @@ class JobPositionsTable
                             'candidate_code'     => $candidateCode,
                             'org_unit_path'      => $record->org_unit_path,
                             'rank_name'          => $record->rank?->name,
+                            'profile_snapshot'   => Application::buildProfileSnapshot($user),
                         ]);
 
                         RateLimiter::hit($rateLimitKey, 30);
