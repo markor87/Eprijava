@@ -20,6 +20,9 @@ class UserResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
+    protected static ?string $modelLabel = 'Корисник';
+    protected static ?string $pluralModelLabel = 'Корисници';
+
     protected static string|\UnitEnum|null $navigationGroup = 'Администрација';
 
     public static function canAccess(): bool
