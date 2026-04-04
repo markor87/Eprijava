@@ -42,7 +42,7 @@ class Register extends BaseRegister
         event(new Registered($user));
 
         Notification::make()
-            ->title('Nalog je uspešno kreiran. Prijavite se.')
+            ->title('Налог је успешно креиран. Пријавите се.')
             ->success()
             ->send();
 

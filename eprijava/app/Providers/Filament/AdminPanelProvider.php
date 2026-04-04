@@ -35,7 +35,9 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->registration(\App\Filament\Pages\Auth\Register::class)
             ->multiFactorAuthentication([
-                EmailAuthentication::make()->codeExpiryMinutes(10),
+                EmailAuthentication::make()
+                    ->codeExpiryMinutes(5)
+                    ->codeNotification(\App\Notifications\VerifyEmailAuthentication::class),
             ], isRequired: true)
             ->colors([
                 'primary' => Color::Amber,

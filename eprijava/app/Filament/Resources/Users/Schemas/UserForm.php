@@ -17,12 +17,12 @@ class UserForm
                 TextInput::make('name')
                     ->required(),
                 Select::make('government_body_id')
-                    ->label('Government Body')
+                    ->label('Државни орган')
                     ->options(GovernmentBody::query()->pluck('name', 'id'))
                     ->searchable()
                     ->nullable(),
                 TextInput::make('email')
-                    ->label('Email address')
+                    ->label('Адреса е-поште')
                     ->email()
                     ->required()
                     ->unique(ignoreRecord: true),
@@ -31,9 +31,9 @@ class UserForm
                     ->dehydrateStateUsing(fn ($state) => filled($state) ? bcrypt($state) : null)
                     ->dehydrated(fn ($state) => filled($state))
                     ->required(fn (string $operation): bool => $operation === 'create')
-                    ->label(fn (string $operation): string => $operation === 'create' ? 'Password' : 'New password (leave blank to keep current)'),
+                    ->label(fn (string $operation): string => $operation === 'create' ? 'Лозинка' : 'Нова лозинка (оставите празно за исту лозинку)'),
                 Select::make('roles')
-                    ->label('Roles')
+                    ->label('Улоге')
                     ->multiple()
                     ->relationship('roles', 'name')
                     ->options(Role::query()->pluck('name', 'id'))

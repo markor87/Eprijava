@@ -16,10 +16,10 @@ class UsersTable
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('email')
-                    ->label('Email address')
+                    ->label('Адреса е-поште')
                     ->searchable(),
                 TextColumn::make('roles.name')
-                    ->label('Roles')
+                    ->label('Улоге')
                     ->badge()
                     ->separator(','),
                 TextColumn::make('created_at')
