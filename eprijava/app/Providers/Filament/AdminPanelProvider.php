@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Models\Setting;
 use Filament\Auth\MultiFactor\Email\EmailAuthentication;
 use Filament\Http\Middleware\Authenticate;
 use Illuminate\Support\Facades\Auth;
@@ -28,17 +29,27 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        return $panel
+        $twoFactorEnabled = true;
+        try {
+            $twoFactorEnabled = (bool) Setting::get('two_factor_required', '1');
+        } catch (\Throwable) {}
+
+        $panel = $panel
             ->default()
             ->id('app')
             ->path('app')
             ->login()
-            ->registration(\App\Filament\Pages\Auth\Register::class)
-            ->multiFactorAuthentication([
+            ->registration(\App\Filament\Pages\Auth\Register::class);
+
+        if ($twoFactorEnabled) {
+            $panel->multiFactorAuthentication([
                 EmailAuthentication::make()
                     ->codeExpiryMinutes(5)
                     ->codeNotification(\App\Notifications\VerifyEmailAuthentication::class),
-            ], isRequired: true)
+            ], isRequired: true);
+        }
+
+        return $panel
             ->colors([
                 'primary' => Color::Amber,
             ])
