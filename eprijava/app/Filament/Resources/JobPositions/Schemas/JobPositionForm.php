@@ -70,9 +70,14 @@ class JobPositionForm
                         ->label('Звање')
                         ->options(Rank::query()->orderBy('name')->pluck('name', 'id'))
                         ->searchable(),
-                    TextInput::make('qualification_level')
+                    Select::make('qualification_level')
                         ->label('Стручна спрема')
-                        ->rule(new SerbianCyrillic()),
+                        ->options([
+                            'ССС' => 'ССС — Средња стручна спрема',
+                            'ВШС' => 'ВШС — Виша школска спрема',
+                            'ВСС' => 'ВСС — Висока стручна спрема',
+                        ])
+                        ->searchable(),
                     TextInput::make('executor_count')
                         ->label('Број извршилаца')
                         ->numeric(),

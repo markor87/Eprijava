@@ -35,8 +35,9 @@ class JobPositionsTable
                 TextColumn::make('workLocation.name')
                     ->label('Место рада')
                     ->sortable(),
-                TextColumn::make('executor_count')
-                    ->label('Број извршилаца')
+                TextColumn::make('qualification_level')
+                    ->label('Стручна спрема')
+                    ->searchable()
                     ->sortable(),
             ])
             ->filters([])
