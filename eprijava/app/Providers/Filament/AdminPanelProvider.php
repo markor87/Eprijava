@@ -51,9 +51,12 @@ class AdminPanelProvider extends PanelProvider
         }
 
         return $panel
-            ->favicon(asset('images/suk-logo.png'))
-            ->brandLogo(asset('images/suk-logo.png'))
-            ->brandLogoHeight('120px')
+            ->favicon(asset('images/suk_logo_simple.png'))
+            ->brandLogo(fn () => Auth::check()
+                ? asset('images/suk_logo_simple.png')
+                : asset('images/suk-logo.png')
+            )
+            ->brandLogoHeight(fn () => Auth::check() ? '40px' : '120px')
             ->colors([
                 'primary' => Color::Amber,
             ])
