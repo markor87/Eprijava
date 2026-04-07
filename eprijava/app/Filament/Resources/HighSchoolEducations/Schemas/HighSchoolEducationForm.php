@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\HighSchoolEducations\Schemas;
 
-use App\Rules\SerbianCyrillic;
+use App\Models\SifarnikSrednjeSkole;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
@@ -16,21 +16,29 @@ class HighSchoolEducationForm
             Section::make('Средња школа / Гимназија')
                 ->inlineLabel()
                 ->schema([
-                    TextInput::make('institution_name')
+                    Select::make('institution_name')
                         ->label('Назив школе')
-                        ->rule(new SerbianCyrillic()),
-                    TextInput::make('institution_location')
+                        ->options(SifarnikSrednjeSkole::orderBy('name')->pluck('name', 'id'))
+                        ->searchable()
+                        ->live()
+                        ->afterStateUpdated(function ($state, callable $set) {
+                            $school = $state ? SifarnikSrednjeSkole::find($state) : null;
+                            $set('institution_location', $school?->id);
+                        }),
+                    Select::make('institution_location')
                         ->label('Седиште школе')
-                        ->rule(new SerbianCyrillic()),
+                        ->options(SifarnikSrednjeSkole::orderBy('city')->pluck('city', 'id'))
+                        ->disabled()
+                        ->dehydrated(true),
                     Select::make('duration')
                         ->label('Трајање')
                         ->options([1 => '1', 2 => '2', 3 => '3', 4 => '4']),
                     TextInput::make('direction')
                         ->label('Смер')
-                        ->rule(new SerbianCyrillic()),
+                        ->rule(new \App\Rules\SerbianCyrillic()),
                     TextInput::make('occupation')
                         ->label('Занимање')
-                        ->rule(new SerbianCyrillic())
+                        ->rule(new \App\Rules\SerbianCyrillic())
                         ->helperText('Не попуњавају кандидати који су завршили гимназију'),
                     TextInput::make('graduation_year')
                         ->label('Година завршетка')

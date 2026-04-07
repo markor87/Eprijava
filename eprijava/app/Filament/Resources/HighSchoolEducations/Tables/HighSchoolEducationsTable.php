@@ -13,11 +13,11 @@ class HighSchoolEducationsTable
     {
         return $table
             ->columns([
-                TextColumn::make('institution_name')
+                TextColumn::make('school.name')
                     ->label('Назив школе')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('institution_location')
+                TextColumn::make('school.city')
                     ->label('Седиште')
                     ->searchable(),
                 TextColumn::make('direction')
