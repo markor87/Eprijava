@@ -38,6 +38,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('app')
             ->path('app')
+            ->brandName('Е-пријава')
             ->login()
             ->registration(\App\Filament\Pages\Auth\Register::class);
 
@@ -80,6 +81,15 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
+            ->renderHook(
+                PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
+                fn () => new HtmlString('
+                    <div style="display:flex; align-items:center; justify-content:center; gap:1.5rem; margin-bottom:1.5rem; flex-wrap:wrap;">
+                        <img src="/images/poreska-uprava.jpg" alt="Пореска управа" style="height:70px; border-radius:6px;">
+                        <img src="/images/suk-logo.png" alt="Служба за управљање кадровима" style="height:70px;">
+                    </div>
+                '),
+            )
             ->renderHook(
                 PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
                 fn () => Auth::check()
