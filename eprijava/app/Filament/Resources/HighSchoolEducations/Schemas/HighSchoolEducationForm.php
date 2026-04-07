@@ -18,7 +18,10 @@ class HighSchoolEducationForm
                 ->schema([
                     Select::make('institution_name')
                         ->label('Назив школе')
-                        ->options(SifarnikSrednjeSkole::orderBy('name')->pluck('name', 'id'))
+                        ->options(
+                            SifarnikSrednjeSkole::orderBy('name')->get()
+                                ->mapWithKeys(fn($s) => [$s->id => $s->name . ' — ' . $s->city])
+                        )
                         ->searchable()
                         ->live()
                         ->afterStateUpdated(function ($state, callable $set) {
