@@ -20,11 +20,11 @@ class SifarnikSrednjeSkoleResource extends Resource
 {
     protected static ?string $model = SifarnikSrednjeSkoleModel::class;
 
-    protected static ?string $slug = 'sifarnik-srednje-skole';
+    protected static ?string $slug = 'high-schools';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingLibrary;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Шифарници';
+    protected static string|UnitEnum|null $navigationGroup = 'Администрација';
 
     protected static ?string $navigationLabel = 'Средње школе';
 
