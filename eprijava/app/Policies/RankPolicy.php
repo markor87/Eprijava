@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\Rank;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Foundation\Auth\User as AuthUser;
 
 class RankPolicy
 {
     use HandlesAuthorization;
-
+    
     public function viewAny(AuthUser $authUser): bool
     {
         return $authUser->can('ViewAny:Rank');
@@ -36,4 +36,35 @@ class RankPolicy
     {
         return $authUser->can('Delete:Rank');
     }
+
+    public function restore(AuthUser $authUser, Rank $rank): bool
+    {
+        return $authUser->can('Restore:Rank');
+    }
+
+    public function forceDelete(AuthUser $authUser, Rank $rank): bool
+    {
+        return $authUser->can('ForceDelete:Rank');
+    }
+
+    public function forceDeleteAny(AuthUser $authUser): bool
+    {
+        return $authUser->can('ForceDeleteAny:Rank');
+    }
+
+    public function restoreAny(AuthUser $authUser): bool
+    {
+        return $authUser->can('RestoreAny:Rank');
+    }
+
+    public function replicate(AuthUser $authUser, Rank $rank): bool
+    {
+        return $authUser->can('Replicate:Rank');
+    }
+
+    public function reorder(AuthUser $authUser): bool
+    {
+        return $authUser->can('Reorder:Rank');
+    }
+
 }

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Filament\Resources\SifarnikSrednjeSkole\Tables;
+namespace App\Filament\Resources\HighSchools\Tables;
 
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class SifarnikSrednjeSkoleTable
+class HighSchoolsTable
 {
     public static function configure(Table $table): Table
     {

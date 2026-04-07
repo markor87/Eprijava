@@ -26,6 +26,6 @@ class HighSchoolEducation extends Model
 
     public function school(): BelongsTo
     {
-        return $this->belongsTo(SifarnikSrednjeSkole::class, 'institution_name');
+        return $this->belongsTo(HighSchool::class, 'institution_name');
     }
 }

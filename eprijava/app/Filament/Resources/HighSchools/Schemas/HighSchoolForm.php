@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Filament\Resources\SifarnikSrednjeSkole\Schemas;
+namespace App\Filament\Resources\HighSchools\Schemas;
 
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
-class SifarnikSrednjeSkoleForm
+class HighSchoolForm
 {
     public static function configure(Schema $schema): Schema
     {

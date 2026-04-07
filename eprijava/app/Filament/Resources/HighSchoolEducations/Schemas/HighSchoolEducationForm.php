@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\HighSchoolEducations\Schemas;
 
-use App\Models\SifarnikSrednjeSkole;
+use App\Models\HighSchool;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
@@ -19,18 +19,18 @@ class HighSchoolEducationForm
                     Select::make('institution_name')
                         ->label('Назив школе')
                         ->options(
-                            SifarnikSrednjeSkole::orderBy('name')->get()
+                            HighSchool::orderBy('name')->get()
                                 ->mapWithKeys(fn($s) => [$s->id => $s->name . ' — ' . $s->city])
                         )
                         ->searchable()
                         ->live()
                         ->afterStateUpdated(function ($state, callable $set) {
-                            $school = $state ? SifarnikSrednjeSkole::find($state) : null;
+                            $school = $state ? HighSchool::find($state) : null;
                             $set('institution_location', $school?->id);
                         }),
                     Select::make('institution_location')
                         ->label('Седиште школе')
-                        ->options(SifarnikSrednjeSkole::orderBy('city')->pluck('city', 'id'))
+                        ->options(HighSchool::orderBy('city')->pluck('city', 'id'))
                         ->disabled()
                         ->dehydrated(true),
                     Select::make('duration')
