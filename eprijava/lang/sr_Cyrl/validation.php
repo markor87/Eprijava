@@ -162,6 +162,99 @@ return [
         ],
     ],
 
-    'attributes' => [],
+    'attributes' => [
+        // Лични подаци
+        'first_name'                            => 'Ime',
+        'last_name'                             => 'Презиме',
+        'national_id'                           => 'Матични број (ЈМБГ)',
+        'citizenship'                           => 'Држављанство',
+        'place_of_birth_id'                     => 'Место рођења',
+        'address_street'                        => 'Улица и број',
+        'address_postal_code'                   => 'Поштански број',
+        'address_city'                          => 'Место пребивалишта',
+        'delivery_street'                       => 'Улица и број (достава)',
+        'delivery_postal_code'                  => 'Поштански број (достава)',
+        'delivery_city'                         => 'Место (достава)',
+        'phone'                                 => 'Телефон',
+        'email'                                 => 'Е-пошта',
+
+        // Средња школа
+        'institution_name'                      => 'Назив школе',
+        'institution_location'                  => 'Седиште школе',
+        'duration'                              => 'Трајање',
+        'direction'                             => 'Смер',
+        'occupation'                            => 'Занимање',
+        'graduation_year'                       => 'Година завршетка',
+
+        // Виша школа / Факултет
+        'study_type'                            => 'Врста студија',
+        'volume_espb'                           => 'Обим студија (ЕСПБ)',
+        'institution_location_id'               => 'Место',
+        'program_name'                          => 'Назив студијског програма',
+        'title_id'                              => 'Стечено звање',
+        'graduation_date'                       => 'Датум завршетка',
+
+        // Радно искуство
+        'employer_name'                         => 'Назив послодавца',
+        'job_title'                             => 'Назив радног места',
+        'job_description'                       => 'Опис посла',
+        'employment_basis'                      => 'Основ ангажовања',
+        'period_from'                           => 'Период од',
+        'period_to'                             => 'Период до',
+        'required_education'                    => 'Захтевано образовање',
+
+        // Рачунарске вештине
+        'word_has_certificate'                  => 'Word — поседујем сертификат',
+        'word_certificate_year'                 => 'Word — година сертификата',
+        'word_exemption_requested'              => 'Word — ослобађање тестирања',
+        'excel_has_certificate'                 => 'Excel — поседујем сертификат',
+        'excel_certificate_year'                => 'Excel — година сертификата',
+        'excel_exemption_requested'             => 'Excel — ослобађање тестирања',
+        'internet_has_certificate'              => 'Internet — поседујем сертификат',
+        'internet_certificate_year'             => 'Internet — година сертификата',
+        'internet_exemption_requested'          => 'Internet — ослобађање тестирања',
+
+        // Страни језик
+        'level'                                 => 'Ниво',
+        'has_certificate'                       => 'Поседујем сертификат',
+        'year_of_examination'                   => 'Година полагања',
+        'exemption_requested'                   => 'Ослобађање тестирања',
+
+        // Додатне обуке
+        'training_name'                         => 'Назив обуке',
+        'location_or_level'                     => 'Место / ниво знања',
+        'year'                                  => 'Година',
+
+        // Изјаве
+        'wants_functional_competency_exemption' => 'Ослобађање тестирања компетенција',
+        'behavioral_competency_checked'         => 'Провера понашајних компетенција',
+        'behavioral_competency_checked_body'    => 'Назив државног органа',
+        'behavioral_competency_passed'          => 'Резултат провере',
+        'special_conditions_needed'             => 'Посебни услови',
+        'special_conditions_description'        => 'Опис посебних услова',
+        'employment_terminated_for_breach'      => 'Престанак радног односа',
+        'official_data_collection'              => 'Прибављање података',
+
+        // Извор сазнавања
+        'source'                                => 'Извор сазнавања',
+        'interested_in_other_jobs'              => 'Заинтересованост за друге послове',
+
+        // Корисници
+        'name'                                  => 'Корисничко ime',
+        'password'                              => 'Лозинка',
+        'roles'                                 => 'Улоге',
+
+        // Шифарници
+        'educational_scientific_field'          => 'Образовно-научно поље',
+        'scientific_professional_area'          => 'Научно-стручна област',
+        'sort_order'                            => 'Редослед',
+        'language_name'                         => 'Назив страног језика',
+        'minority_name'                         => 'Назив националне мањине',
+        'proof_description'                     => 'Опис доказа',
+        'proof_type'                            => 'Врста доказа',
+        'position_name'                         => 'Назив радног места',
+        'issuing_authority'                     => 'Назив органа',
+        'exam_date'                             => 'Датум полагања',
+    ],
 
 ];
