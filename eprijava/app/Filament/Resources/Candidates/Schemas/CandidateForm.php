@@ -31,7 +31,8 @@ class CandidateForm
                         ->label('Матични број (ЈМБГ)')
                         ->required()
                         ->maxLength(13)
-                        ->rule(new Jmbg()),
+                        ->rule(new Jmbg())
+                        ->unique(table: 'candidates', column: 'national_id', ignoreRecord: true),
                     Select::make('citizenship')
                         ->label('Држављанство')
                         ->options([

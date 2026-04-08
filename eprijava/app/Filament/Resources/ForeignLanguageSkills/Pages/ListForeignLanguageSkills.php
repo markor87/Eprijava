@@ -14,34 +14,20 @@ class ListForeignLanguageSkills extends ListRecords
 
     public function mount(): void
     {
+        if (!Auth::user()->hasRole('super_admin')) {
+            $set = ForeignLanguageSkillSet::where('user_id', Auth::id())->first();
+            if (!$set) {
+                $set = ForeignLanguageSkillSet::create(['user_id' => Auth::id()]);
+            }
+            $this->redirect(ForeignLanguageSkillResource::getUrl('edit', ['record' => $set->id]));
+            return;
+        }
+
         parent::mount();
     }
 
     protected function getHeaderActions(): array
     {
-        $user = Auth::user();
-
-        if (!$user?->hasRole('super_admin') && !$user?->can('Create:ForeignLanguageSkillSet')) {
-            return [];
-        }
-
-        $set = ForeignLanguageSkillSet::where('user_id', Auth::id())->first();
-
-        if ($set) {
-            return [
-                Action::make('edit_my_skills')
-                    ->label('Додај страни језик')
-                    ->url(ForeignLanguageSkillResource::getUrl('edit', ['record' => $set->id])),
-            ];
-        }
-
-        return [
-            Action::make('edit_my_skills')
-                ->label('Додај страни језик')
-                ->action(function () {
-                    $set = ForeignLanguageSkillSet::create(['user_id' => Auth::id()]);
-                    $this->redirect(ForeignLanguageSkillResource::getUrl('edit', ['record' => $set->id]));
-                }),
-        ];
+        return [];
     }
 }
