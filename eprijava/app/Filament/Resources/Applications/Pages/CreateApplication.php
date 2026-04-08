@@ -49,4 +49,12 @@ class CreateApplication extends CreateRecord
         $data['profile_snapshot'] = Application::buildProfileSnapshot(Auth::user());
         return $data;
     }
+
+    protected function getFormActions(): array
+    {
+        return [
+            $this->getCreateFormAction(),
+            $this->getCancelFormAction(),
+        ];
+    }
 }

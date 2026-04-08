@@ -29,6 +29,14 @@ class CreateHighSchoolEducation extends CreateRecord
         return $data;
     }
 
+    protected function getFormActions(): array
+    {
+        return [
+            $this->getCreateFormAction(),
+            $this->getCancelFormAction(),
+        ];
+    }
+
     protected function getRedirectUrl(): string
     {
         return static::getResource()::getUrl('index');

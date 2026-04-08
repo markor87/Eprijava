@@ -14,6 +14,10 @@ class HigherEducationsTable
         return $table
             ->description('Наведите од најнижег до највишег звања које сте стекли (студије првог степена, студије другог степена, студије трећег степена / докторске академске студије)')
             ->columns([
+                TextColumn::make('user_id')
+                    ->label('ID корисника')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('institution_name')
                     ->label('Назив факултета / установе')
                     ->searchable()
@@ -32,9 +36,8 @@ class HigherEducationsTable
                         default               => $state ?? '—',
                     })
                     ->placeholder('—'),
-                TextColumn::make('graduation_date')
-                    ->label('Датум завршетка')
-                    ->date('d.m.Y')
+                TextColumn::make('volume_espb')
+                    ->label('Обим студија (ЕСПБ)')
                     ->placeholder('—'),
             ])
             ->filters([])

@@ -13,6 +13,10 @@ class ComputerSkillsTable
     {
         return $table
             ->columns([
+                TextColumn::make('user_id')
+                    ->label('ID корисника')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('computer_skills_summary')
                     ->label('Сертификат')
                     ->getStateUsing(fn($record) => collect([

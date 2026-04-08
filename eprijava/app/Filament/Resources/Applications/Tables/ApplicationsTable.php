@@ -18,6 +18,10 @@ class ApplicationsTable
     {
         return $table
             ->columns([
+                TextColumn::make('user_id')
+                    ->label('ID корисника')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('governmentBody.name')
                     ->label('Орган')
                     ->searchable()

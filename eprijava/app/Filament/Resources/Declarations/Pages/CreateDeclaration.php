@@ -28,4 +28,12 @@ class CreateDeclaration extends CreateRecord
 
         return $data;
     }
+
+    protected function getFormActions(): array
+    {
+        return [
+            $this->getCreateFormAction(),
+            $this->getCancelFormAction(),
+        ];
+    }
 }

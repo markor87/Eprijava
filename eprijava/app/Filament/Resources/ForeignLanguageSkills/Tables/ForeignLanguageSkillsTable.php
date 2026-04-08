@@ -13,6 +13,10 @@ class ForeignLanguageSkillsTable
     {
         return $table
             ->columns([
+                TextColumn::make('user_id')
+                    ->label('ID корисника')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('languages_summary')
                     ->label('Унети језици')
                     ->getStateUsing(fn($record) => $record->foreignLanguageSkills

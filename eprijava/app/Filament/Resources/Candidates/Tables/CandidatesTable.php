@@ -13,6 +13,10 @@ class CandidatesTable
     {
         return $table
             ->columns([
+                TextColumn::make('user_id')
+                    ->label('ID корисника')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('last_name')
                     ->label('Презиме')
                     ->searchable()

@@ -13,6 +13,10 @@ class TrainingsTable
     {
         return $table
             ->columns([
+                TextColumn::make('user_id')
+                    ->label('ID корисника')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('exams_entered')
                     ->label('Унети испити')
                     ->getStateUsing(fn($record) => $record->trainings

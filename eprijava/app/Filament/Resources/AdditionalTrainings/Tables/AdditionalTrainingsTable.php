@@ -13,6 +13,10 @@ class AdditionalTrainingsTable
     {
         return $table
             ->columns([
+                TextColumn::make('user_id')
+                    ->label('ID корисника')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('training_name')
                     ->label('Обука / страни језик')
                     ->searchable()

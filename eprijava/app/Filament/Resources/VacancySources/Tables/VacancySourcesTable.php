@@ -30,6 +30,10 @@ class VacancySourcesTable
     {
         return $table
             ->columns([
+                TextColumn::make('user_id')
+                    ->label('ID корисника')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('source')
                     ->label('Извор')
                     ->formatStateUsing(fn($state) => self::$sourceLabels[$state] ?? '—')
