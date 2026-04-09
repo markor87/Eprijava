@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Storage;
 
 class ComputerSkill extends Model
 {
@@ -34,31 +33,6 @@ class ComputerSkill extends Model
         'excel_exemption_requested'   => 'boolean',
         'internet_exemption_requested' => 'boolean',
     ];
-
-    protected static function booted(): void
-    {
-        $attachmentColumns = [
-            'word_certificate_attachment',
-            'excel_certificate_attachment',
-            'internet_certificate_attachment',
-        ];
-
-        static::updating(function (self $record) use ($attachmentColumns) {
-            foreach ($attachmentColumns as $col) {
-                if ($record->isDirty($col) && $record->getOriginal($col)) {
-                    Storage::disk('local')->delete($record->getOriginal($col));
-                }
-            }
-        });
-
-        static::deleting(function (self $record) use ($attachmentColumns) {
-            foreach ($attachmentColumns as $col) {
-                if ($record->$col) {
-                    Storage::disk('local')->delete($record->$col);
-                }
-            }
-        });
-    }
 
     public function user(): BelongsTo
     {

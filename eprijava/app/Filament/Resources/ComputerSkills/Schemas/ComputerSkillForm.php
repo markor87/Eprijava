@@ -45,6 +45,8 @@ class ComputerSkillForm
                         ->directory(fn() => 'computer-skill-attachments/' . auth()->id() . '/word')
                         ->downloadable()
                         ->previewable(false)
+                        ->deletable(false)
+                        ->maxSize(5120)
                         ->hidden(fn($get) => !$get('word_exemption_requested'))
                         ->required(fn($get) => (bool) $get('word_exemption_requested')),
                 ]),
@@ -81,6 +83,8 @@ class ComputerSkillForm
                         ->directory(fn() => 'computer-skill-attachments/' . auth()->id() . '/excel')
                         ->downloadable()
                         ->previewable(false)
+                        ->deletable(false)
+                        ->maxSize(5120)
                         ->hidden(fn($get) => !$get('excel_exemption_requested'))
                         ->required(fn($get) => (bool) $get('excel_exemption_requested')),
                 ]),
@@ -117,6 +121,8 @@ class ComputerSkillForm
                         ->directory(fn() => 'computer-skill-attachments/' . auth()->id() . '/internet')
                         ->downloadable()
                         ->previewable(false)
+                        ->deletable(false)
+                        ->maxSize(5120)
                         ->hidden(fn($get) => !$get('internet_exemption_requested'))
                         ->required(fn($get) => (bool) $get('internet_exemption_requested')),
                 ]),

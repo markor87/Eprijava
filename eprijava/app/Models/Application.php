@@ -89,6 +89,7 @@ class Application extends Model
             ])->all(),
 
             'foreignSkillSet' => $foreignSkillSet ? [
+                'certificate_attachment' => $foreignSkillSet->certificate_attachment,
                 'foreignLanguageSkills' => $foreignSkillSet->foreignLanguageSkills->map(fn($s) => [
                     ...$s->only($s->getFillable()),
                     'foreignLanguage' => $s->foreignLanguage

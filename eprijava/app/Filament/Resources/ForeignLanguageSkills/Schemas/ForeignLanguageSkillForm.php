@@ -70,6 +70,9 @@ class ForeignLanguageSkillForm
                         ->directory(fn() => 'certificate-attachments/' . auth()->user()?->id)
                         ->downloadable()
                         ->previewable(false)
+                        ->deletable(false)
+                        ->maxFiles(fn($get) => max(1, count(array_filter($get('foreignLanguageSkills') ?? []))))
+                        ->maxSize(5120)
                         ->hidden(fn($get) => !collect($get('foreignLanguageSkills'))->contains(fn($row) => ($row['exemption_requested'] ?? 0) == 1))
                         ->required(fn($get) => collect($get('foreignLanguageSkills'))->contains(fn($row) => ($row['exemption_requested'] ?? 0) == 1)),
                 ]),
