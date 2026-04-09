@@ -55,6 +55,11 @@ class User extends Authenticatable implements HasEmailAuthentication, HasName
         return $this->hasMany(ForeignLanguageSkill::class);
     }
 
+    public function foreignLanguageSkillSet(): HasOne
+    {
+        return $this->hasOne(ForeignLanguageSkillSet::class);
+    }
+
     public function computerSkill(): HasOne
     {
         return $this->hasOne(ComputerSkill::class);

@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Models\Application;
 use App\Models\Competition;
+use App\Models\ForeignLanguageSkillSet;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
@@ -42,7 +43,7 @@ class Sertifikati extends Page implements HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->query(Application::query()->with(['competition.governmentBody']))
+            ->query(Application::query()->with(['competition.governmentBody', 'user.foreignLanguageSkillSet']))
             ->columns([
                 TextColumn::make('competition_display')
                     ->label('Конкурс')
@@ -88,9 +89,7 @@ class Sertifikati extends Page implements HasTable
                     ->label('Страни језик')
                     ->icon(Heroicon::OutlinedArrowDownTray)
                     ->action(fn(Application $record) => $this->downloadForeignLang($record))
-                    ->hidden(fn(Application $record) =>
-                        empty(array_filter((array) ($record->profile_snapshot['foreignSkillSet']['certificate_attachment'] ?? [])))
-                    ),
+                    ->hidden(fn(Application $record) => empty($this->getForeignLangFiles($record))),
 
                 Action::make('download_computer')
                     ->label('Рачунар')
@@ -125,12 +124,27 @@ class Sertifikati extends Page implements HasTable
         ]));
     }
 
-    private function downloadForeignLang(Application $record): mixed
+    private function getForeignLangFiles(Application $record): array
     {
         $files = array_values(array_filter(
             (array) ($record->profile_snapshot['foreignSkillSet']['certificate_attachment'] ?? [])
         ));
-        $base = $this->baseName($record);
+
+        if (!empty($files)) {
+            return $files;
+        }
+
+        // Fallback: user uploaded cert after the application was submitted
+        $skillSet = $record->user?->foreignLanguageSkillSet
+            ?? ForeignLanguageSkillSet::where('user_id', $record->user_id)->first();
+
+        return array_values(array_filter((array) $skillSet?->certificate_attachment));
+    }
+
+    private function downloadForeignLang(Application $record): mixed
+    {
+        $files = $this->getForeignLangFiles($record);
+        $base  = $this->baseName($record);
 
         if (count($files) === 1) {
             $path = $files[0];
@@ -178,10 +192,8 @@ class Sertifikati extends Page implements HasTable
     private function downloadAllForeignLang(): mixed
     {
         $entries = [];
-        foreach (Application::all() as $app) {
-            $files = array_values(array_filter(
-                (array) ($app->profile_snapshot['foreignSkillSet']['certificate_attachment'] ?? [])
-            ));
+        foreach (Application::with('user.foreignLanguageSkillSet')->get() as $app) {
+            $files = $this->getForeignLangFiles($app);
             if (empty($files)) continue;
             $base = $this->baseName($app);
             foreach ($files as $i => $path) {
