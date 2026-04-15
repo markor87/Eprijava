@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class NationalMinority extends Model
 {
-    protected $table = 'national_minorities';
+    protected $table = 'reference_national_minorities';
 
     protected $fillable = [
         'minority_name',

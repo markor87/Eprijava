@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class GovernmentBody extends Model
 {
-    protected $table = 'government_bodies';
+    protected $table = 'reference_government_bodies';
 
     protected $fillable = [
         'name',

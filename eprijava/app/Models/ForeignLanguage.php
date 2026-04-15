@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ForeignLanguage extends Model
 {
+    protected $table = 'reference_foreign_languages';
+
     protected $fillable = ['language_name'];
 
     public function foreignLanguageSkills(): HasMany

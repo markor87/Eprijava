@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class RequiredProof extends Model
 {
-    protected $table = 'required_proofs';
+    protected $table = 'reference_required_proofs';
 
     protected $fillable = [
         'proof_description',
