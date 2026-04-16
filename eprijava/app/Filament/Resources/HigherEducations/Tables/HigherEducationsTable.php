@@ -21,7 +21,9 @@ class HigherEducationsTable
                 TextColumn::make('institution_name')
                     ->label('Назив факултета / установе')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->limit(40)
+                    ->tooltip(fn($state) => $state),
                 TextColumn::make('institutionLocation.name')
                     ->label('Место')
                     ->sortable(),

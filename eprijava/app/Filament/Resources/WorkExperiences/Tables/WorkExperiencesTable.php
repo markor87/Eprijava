@@ -24,7 +24,9 @@ class WorkExperiencesTable
                     ->sortable(),
                 TextColumn::make('job_title')
                     ->label('Радно место')
-                    ->searchable(),
+                    ->searchable()
+                    ->limit(50)
+                    ->tooltip(fn($state) => $state),
                 TextColumn::make('period_from')
                     ->label('Од')
                     ->date('d.m.Y.')

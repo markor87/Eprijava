@@ -28,7 +28,9 @@ class JobPositionsTable
                 TextColumn::make('position_name')
                     ->label('Назив радног места')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->limit(50)
+                    ->tooltip(fn($state) => $state),
                 TextColumn::make('employment_type')
                     ->label('Врста радног односа')
                     ->sortable(),

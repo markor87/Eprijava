@@ -10,6 +10,7 @@ use Filament\Actions\EditAction;
 use Filament\Support\Icons\Heroicon;
 use Filament\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Table;
 
 class ApplicationsTable
@@ -25,11 +26,15 @@ class ApplicationsTable
                 TextColumn::make('governmentBody.name')
                     ->label('Орган')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->limit(30)
+                    ->tooltip(fn($state) => $state),
                 TextColumn::make('jobPosition.position_name')
                     ->label('Радно место')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->limit(50)
+                    ->tooltip(fn($state) => $state),
                 TextColumn::make('first_name')
                     ->label('Ime')
                     ->searchable()
@@ -47,7 +52,9 @@ class ApplicationsTable
                     ->copyable(),
                 TextColumn::make('rank_name')
                     ->label('Звање')
-                    ->searchable(),
+                    ->searchable()
+                    ->limit(30)
+                    ->tooltip(fn($state) => $state),
                 TextColumn::make('created_at')
                     ->label('Датум пријаве')
                     ->date('d.m.Y')
@@ -101,6 +108,7 @@ class ApplicationsTable
                 EditAction::make(),
                 DeleteAction::make(),
             ])
+            ->recordActionsPosition(RecordActionsPosition::BeforeColumns)
             ->toolbarActions([]);
     }
 }

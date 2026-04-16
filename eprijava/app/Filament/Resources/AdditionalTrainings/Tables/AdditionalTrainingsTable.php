@@ -20,9 +20,13 @@ class AdditionalTrainingsTable
                 TextColumn::make('training_name')
                     ->label('Обука / страни језик')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->limit(50)
+                    ->tooltip(fn($state) => $state),
                 TextColumn::make('institution_name')
-                    ->label('Назив институције'),
+                    ->label('Назив институције')
+                    ->limit(40)
+                    ->tooltip(fn($state) => $state),
                 TextColumn::make('location_or_level')
                     ->label('Место / ниво знања'),
                 TextColumn::make('year')
