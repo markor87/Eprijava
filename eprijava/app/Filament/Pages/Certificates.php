@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Models\Application;
 use App\Models\Competition;
 use BackedEnum;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
@@ -14,29 +15,24 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use UnitEnum;
 use ZipArchive;
 
-class Sertifikati extends Page implements HasTable
+class Certificates extends Page implements HasTable
 {
+    use HasPageShield;
     use InteractsWithTable;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentCheck;
     protected static string|UnitEnum|null   $navigationGroup = 'Конкурси';
     protected static ?int                   $navigationSort  = 10;
+    protected static ?string                $slug = 'certificates';
     protected string                        $view = 'filament.pages.sertifikati';
 
     public static function getNavigationLabel(): string
     {
         return 'Сертификати';
-    }
-
-    public static function canAccess(): bool
-    {
-        $user = Auth::user();
-        return $user && ($user->hasRole('super_admin') || $user->can('view_sertifikati'));
     }
 
     public function table(Table $table): Table
@@ -153,8 +149,8 @@ class Sertifikati extends Page implements HasTable
 
     private function downloadComputer(Application $record): mixed
     {
-        $snap = $record->profile_snapshot['computerSkill'] ?? [];
-        $base = $this->baseName($record);
+        $snap        = $record->profile_snapshot['computerSkill'] ?? [];
+        $base        = $this->baseName($record);
         $attachments = array_filter([
             'word'     => $snap['word_certificate_attachment']     ?? null,
             'excel'    => $snap['excel_certificate_attachment']    ?? null,
@@ -191,7 +187,7 @@ class Sertifikati extends Page implements HasTable
                 $entries[$name] = $path;
             }
         }
-        return $this->zipFiles($entries, 'sertifikati_strani_jezici.zip');
+        return $this->zipFiles($entries, 'certificates_foreign_lang.zip');
     }
 
     private function downloadAllComputer(): mixed
@@ -208,7 +204,7 @@ class Sertifikati extends Page implements HasTable
                 $entries["{$base}_{$type}." . pathinfo($path, PATHINFO_EXTENSION)] = $path;
             }
         }
-        return $this->zipFiles($entries, 'sertifikati_racunar.zip');
+        return $this->zipFiles($entries, 'certificates_computer.zip');
     }
 
     /** @param array<string, string> $entries  filename => storage path */

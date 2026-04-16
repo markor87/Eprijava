@@ -1,0 +1,111 @@
+ПРЕЛАЗАК НА LINUX СЕРВЕР
+========================
+
+1. NGINX КОНФИГУРАЦИЈА
+----------------------
+Направи фајл /etc/nginx/sites-available/eprijava:
+
+    server {
+        listen 80;
+        server_name твоj-домен.rs;
+        root /var/www/eprijava/public;
+
+        index index.php;
+
+        location / {
+            try_files $uri $uri/ /index.php?$query_string;
+        }
+
+        location ~ \.php$ {
+            include snippets/fastcgi-php.conf;
+            fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+            fastcgi_read_timeout 3600;   # важно за SSE (Преузимање пријава)
+        }
+
+        location ~ /\.ht {
+            deny all;
+        }
+    }
+
+Потом:
+    sudo ln -s /etc/nginx/sites-available/eprijava /etc/nginx/sites-enabled/
+    sudo nginx -t
+    sudo systemctl reload nginx
+
+
+2. PHP-FPM КОНФИГУРАЦИЈА
+------------------------
+Отвори /etc/php/8.2/fpm/pool.d/www.conf и провери/постави:
+
+    request_terminate_timeout = 0
+
+Ако је подешено на нпр. 300, повећај или стави 0 (без лимита).
+Ово је важно да PHP не прекида генерисање ZIP-а за велики број пријава.
+
+Рестарт:
+    sudo systemctl restart php8.2-fpm
+
+
+3. ДОЗВОЛЕ НА ФОЛДЕРИМА
+------------------------
+    sudo chown -R www-data:www-data /var/www/eprijava
+    sudo chmod -R 755 /var/www/eprijava
+    sudo chmod -R 775 /var/www/eprijava/storage
+    sudo chmod -R 775 /var/www/eprijava/bootstrap/cache
+
+Фолдер storage/app/downloads се прави аутоматски при генерисању ZIP-а,
+али мора да постоји права дозвола на storage/app/ (обухваћена горе).
+
+
+4. .ENV ПОДЕШАВАЊА
+------------------
+Копирај .env.example у .env и постави:
+
+    APP_ENV=production
+    APP_DEBUG=false
+    APP_URL=https://твоj-домен.rs
+
+    DB_HOST=127.0.0.1
+    DB_DATABASE=eprijava
+    DB_USERNAME=...
+    DB_PASSWORD=...
+
+    FILESYSTEM_DISK=local
+    SESSION_DRIVER=file     # или database/redis ако постоји
+    CACHE_STORE=file        # или database/redis ако постоји
+
+
+5. ИНСТАЛАЦИЈА И ПОКРЕТАЊЕ
+---------------------------
+    cd /var/www/eprijava
+    composer install --no-dev --optimize-autoloader
+    php artisan key:generate
+    php artisan migrate --force
+    php artisan storage:link
+    php artisan config:cache
+    php artisan route:cache
+    php artisan view:cache
+
+
+6. ПРИВАТНИ ФАЈЛОВИ (сертификати)
+----------------------------------
+Сертификати се чувају у storage/app/ преко local диска.
+То је ван public/ фолдера и нису директно доступни преко веба — OK.
+Постоји /private-files/{path} рута са auth мидлвером за служење.
+
+
+7. HTTPS (препоручено)
+----------------------
+    sudo apt install certbot python3-certbot-nginx
+    sudo certbot --nginx -d твоj-домен.rs
+
+Certbot ће сам допунити nginx конфигурацију.
+
+
+8. ТЕСТИРАЊЕ SSE (Преузимање пријава)
+--------------------------------------
+После деплоја, кликни Преузми пријаве и провери да ли бројач расте.
+Ако прогрес бар стоји на 0 а касније одједном скочи на 100%, nginx
+буферише одговор упркос X-Accel-Buffering: no хедеру.
+Решење — додај у location ~ \.php$ блок:
+    fastcgi_buffering off;

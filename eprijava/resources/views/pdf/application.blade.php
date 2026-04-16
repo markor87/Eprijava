@@ -537,13 +537,18 @@ $sourceLabels = [
 <div class="note">Подаци нису унети.</div>
 @endif
 
-{{-- ─── ПОТПИС ─── --}}
-<table class="sig-table" style="margin-top: 18px;">
+@if(!empty($showSignature))
+<table style="width:100%; margin-top: 18px;">
     <tr>
-        <td style="width: 50%;">Место и датум: _______________________________</td>
-        <td>Потпис: _______________________________</td>
+        <td style="width: 50%;">Место и датум:</td>
+        <td>Потпис кандидата:</td>
+    </tr>
+    <tr>
+        <td style="width: 50%; padding-top: 16px;">_______________________________</td>
+        <td style="padding-top: 16px;">_______________________________</td>
     </tr>
 </table>
+@endif
 
 </div>
 </body>
