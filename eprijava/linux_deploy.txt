@@ -109,3 +109,36 @@ Certbot ће сам допунити nginx конфигурацију.
 буферише одговор упркос X-Accel-Buffering: no хедеру.
 Решење — додај у location ~ \.php$ блок:
     fastcgi_buffering off;
+
+
+9. APACHE2 (алтернатива уместо nginx)
+--------------------------------------
+Ако користиш Apache2 уместо nginx:
+
+а) Онемогући буферисање одговора (важно за SSE) у .htaccess или VirtualHost:
+
+    SetEnv no-gzip 1
+    SetEnv dont-vary 1
+
+б) Постави таjмаут у VirtualHost конфигурацији:
+
+    TimeOut 7200
+
+в) Ако користиш Apache + PHP-FPM преко mod_proxy_fcgi, исто важи:
+    request_terminate_timeout = 0  (у /etc/php/8.2/fpm/pool.d/www.conf)
+
+г) Ако користиш mod_php уместо FPM, set_time_limit(0) у PHP коду је довољан —
+   нема посебне FPM конфигурације.
+
+д) Ако је укључен mod_http2 и добијаш ERR_HTTP2_PROTOCOL_ERROR у конзоли
+   (хармлесна грешка — преузимање свеједно ради), можеш онемогућити HTTP/2
+   само за SSE руту:
+
+    <Location /generate-competition-zip>
+        Protocols http/1.1
+    </Location>
+
+е) HTTPS са Let's Encrypt за Apache:
+
+    sudo apt install certbot python3-certbot-apache
+    sudo certbot --apache -d твоj-домен.rs
