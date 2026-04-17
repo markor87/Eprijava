@@ -110,7 +110,7 @@ class JobPositionResource extends Resource
                               $q2->whereIn('qualification_level', $fieldMatchLevels)
                                  ->whereExists(function ($sub) use ($userId) {
                                      $sub->from('higher_educations as he')
-                                         ->join('academic_titles as at', 'he.title_id', '=', 'at.id')
+                                         ->join('reference_academic_titles as at', 'he.title_id', '=', 'at.id')
                                          ->where('he.user_id', $userId)
                                          ->whereColumn('at.educational_scientific_field', 'job_positions.educational_scientific_field_id')
                                          ->whereColumn('at.scientific_professional_area', 'job_positions.scientific_professional_field_id');
