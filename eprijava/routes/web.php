@@ -16,6 +16,10 @@ Route::get('/download-competition-zip/{token}', [CompetitionZipController::class
     ->middleware('auth')
     ->name('competition-zip.download');
 
+Route::post('/cancel-competition-zip/{cancelKey}', [CompetitionZipController::class, 'cancel'])
+    ->middleware('auth')
+    ->name('competition-zip.cancel');
+
 Route::get('/private-files/{path}', [PrivateFileController::class, 'serve'])
     ->where('path', '.*')
     ->middleware('auth')

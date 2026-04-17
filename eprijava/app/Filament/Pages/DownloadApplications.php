@@ -14,6 +14,7 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use UnitEnum;
 
 class DownloadApplications extends Page implements HasTable
@@ -25,7 +26,7 @@ class DownloadApplications extends Page implements HasTable
     protected static string|UnitEnum|null   $navigationGroup = 'Конкурси';
     protected static ?int                   $navigationSort  = 5;
     protected static ?string                $slug = 'download-applications';
-    protected string                        $view = 'filament.pages.preuzimanje-prijava';
+    protected string                        $view = 'filament.pages.download-applications';
 
     public bool $isGenerating = false;
 
@@ -76,5 +77,16 @@ class DownloadApplications extends Page implements HasTable
     public function finishDownload(): void
     {
         $this->isGenerating = false;
+    }
+
+    /** Called by Alpine when SSE drops — checks if ZIP finished anyway. */
+    public function checkZipReady(int $competitionId): void
+    {
+        $data = Cache::get("zip_ready_{$competitionId}");
+        if ($data) {
+            $this->dispatch('zip-ready', token: $data['token'], filename: $data['filename']);
+        } else {
+            $this->isGenerating = false;
+        }
     }
 }
