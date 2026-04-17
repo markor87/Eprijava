@@ -36,7 +36,7 @@ class AdminPanelProvider extends PanelProvider
         $panel = $panel
             ->default()
             ->id('app')
-            ->path('app')
+            ->path('')
             ->brandName('Е-пријава')
             ->login()
             ->registration(\App\Filament\Pages\Auth\Register::class);
