@@ -4,7 +4,6 @@ use App\Http\Controllers\CompetitionZipController;
 use App\Http\Controllers\PrivateFileController;
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', '/login');
 
 Route::get('/generate-competition-zip/{competition}', [CompetitionZipController::class, 'generate'])
     ->middleware('auth')
