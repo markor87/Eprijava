@@ -123,4 +123,6 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'security_alert_email' => env('SECURITY_ALERT_EMAIL'),
+
 ];

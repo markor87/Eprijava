@@ -142,3 +142,59 @@ Certbot ће сам допунити nginx конфигурацију.
 
     sudo apt install certbot python3-certbot-apache
     sudo certbot --apache -d твоj-домен.rs
+
+
+10. БЕЗБЕДНОСНА УПОЗОРЕЊА (логовање пријава, е-маил аларми)
+------------------------------------------------------------
+
+а) Додај у .env:
+
+    QUEUE_CONNECTION=database
+    SECURITY_ALERT_EMAIL=admin@твоj-домен.rs
+
+б) TRUSTED PROXIES — обавезно ако је апликација иза nginx/Apache!
+   Без овога request()->ip() враћа 127.0.0.1 уместо стварне IP адресе
+   корисника, па се геолокација и провера нове IP адресе никада не покрећу.
+
+   Отвори bootstrap/app.php и додај у withMiddleware:
+
+       ->withMiddleware(function (Middleware $middleware): void {
+           $middleware->trustProxies(at: '*');
+       })
+
+   Или постави у .env (ако верзија Laravela подржава):
+
+       APP_TRUSTED_PROXIES=*
+
+в) QUEUE WORKER — потребан да би е-маил аларми стварно стигли.
+   Без покренутог воркера послови чекају у табели jobs и никад се не извршавају.
+
+   Инсталирај Supervisor:
+       sudo apt install supervisor
+
+   Направи /etc/supervisor/conf.d/eprijava-worker.conf:
+
+       [program:eprijava-worker]
+       process_name=%(program_name)s_%(process_num)02d
+       command=php /var/www/eprijava/artisan queue:work --sleep=3 --tries=3 --max-time=3600
+       autostart=true
+       autorestart=true
+       stopasgroup=true
+       killasgroup=true
+       user=www-data
+       numprocs=1
+       redirect_stderr=true
+       stdout_logfile=/var/log/eprijava-worker.log
+       stopwaitsecs=3600
+
+   Покрени:
+       sudo supervisorctl reread
+       sudo supervisorctl update
+       sudo supervisorctl start eprijava-worker:*
+
+г) После деплоја покрени миграцију (прави табелу login_logs и jobs):
+       php artisan migrate --force
+
+   Табела jobs се прави аутоматски ако не постоји:
+       php artisan queue:table
+       php artisan migrate --force

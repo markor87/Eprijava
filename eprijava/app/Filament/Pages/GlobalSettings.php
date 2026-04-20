@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Models\Setting;
 use BackedEnum;
 use Filament\Actions\Action;
+use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
@@ -35,7 +36,10 @@ class GlobalSettings extends Page
     public function mount(): void
     {
         $this->form->fill([
-            'two_factor_required' => (bool) Setting::get('two_factor_required', '1'),
+            'two_factor_required'  => (bool) Setting::get('two_factor_required', '1'),
+            'alert_foreign_login'  => (bool) Setting::get('alert_foreign_login', '1'),
+            'alert_new_ip'         => (bool) Setting::get('alert_new_ip', '1'),
+            'alert_failed_attempts'=> (bool) Setting::get('alert_failed_attempts', '1'),
         ]);
     }
 
@@ -43,11 +47,30 @@ class GlobalSettings extends Page
     {
         return $schema
             ->components([
-                Toggle::make('two_factor_required')
-                    ->label('Двофакторска аутентификација')
-                    ->helperText('Када је укључена, сви корисници морају да потврде пријаву путем е-поште.')
-                    ->onIcon('heroicon-m-shield-check')
-                    ->offIcon('heroicon-m-shield-exclamation'),
+                Section::make('Аутентификација')
+                    ->schema([
+                        Toggle::make('two_factor_required')
+                            ->label('Двофакторска аутентификација')
+                            ->helperText('Када је укључена, сви корисници морају да потврде пријаву путем е-поште.')
+                            ->onIcon('heroicon-m-shield-check')
+                            ->offIcon('heroicon-m-shield-exclamation'),
+                    ]),
+
+                Section::make('Безбедносна упозорења')
+                    ->description('Упозорења се шаљу на адресу из подешавања сервера (SECURITY_ALERT_EMAIL).')
+                    ->schema([
+                        Toggle::make('alert_foreign_login')
+                            ->label('Пријава из иностранства')
+                            ->helperText('Шаље е-маил ако се неко пријави са IP адресе ван Србије.'),
+
+                        Toggle::make('alert_new_ip')
+                            ->label('Пријава са нове IP адресе')
+                            ->helperText('Шаље е-маил кад се корисник пријави са IP адресе коју раније није користио.'),
+
+                        Toggle::make('alert_failed_attempts')
+                            ->label('Вишеструки неуспешни покушаји')
+                            ->helperText('Шаље е-маил ако исти налог 10 пута неуспешно покуша да се пријави за 10 минута.'),
+                    ]),
             ])
             ->statePath('data');
     }
@@ -66,7 +89,10 @@ class GlobalSettings extends Page
 
     public function save(): void
     {
-        Setting::set('two_factor_required', $this->data['two_factor_required'] ? '1' : '0');
+        Setting::set('two_factor_required',   $this->data['two_factor_required']   ? '1' : '0');
+        Setting::set('alert_foreign_login',   $this->data['alert_foreign_login']   ? '1' : '0');
+        Setting::set('alert_new_ip',          $this->data['alert_new_ip']          ? '1' : '0');
+        Setting::set('alert_failed_attempts', $this->data['alert_failed_attempts'] ? '1' : '0');
 
         Notification::make()
             ->title('Подешавање сачувано')
