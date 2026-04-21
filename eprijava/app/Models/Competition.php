@@ -31,6 +31,11 @@ class Competition extends Model
         return $this->belongsTo(GovernmentBody::class);
     }
 
+    public function isActive(): bool
+    {
+        return now()->between($this->datum_od, $this->datum_do);
+    }
+
     public function jobPositions(): HasMany
     {
         return $this->hasMany(JobPosition::class);

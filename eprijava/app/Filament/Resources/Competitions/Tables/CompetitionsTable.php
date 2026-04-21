@@ -30,6 +30,11 @@ class CompetitionsTable
                     ->label('Датум до')
                     ->date('d.m.Y')
                     ->sortable(),
+                TextColumn::make('status')
+                    ->label('Статус')
+                    ->badge()
+                    ->state(fn ($record) => now()->between($record->datum_od, $record->datum_do) ? 'Активан' : 'Неактиван')
+                    ->color(fn ($state) => $state === 'Активан' ? 'success' : 'danger'),
             ])
             ->filters([])
             ->recordActions([

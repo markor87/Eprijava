@@ -11,8 +11,7 @@ use Illuminate\Support\Facades\Cache;
 
 class LogFailedLogin
 {
-    // Filament fires Failed multiple times per attempt (multiple guards checked per request).
-    // A static array resets between HTTP requests but persists within one — perfect dedup scope.
+    // Filament fires Failed once per guard per request; deduplicate so we count one attempt.
     private static array $handledEmails = [];
 
     public function handle(Failed $event): void

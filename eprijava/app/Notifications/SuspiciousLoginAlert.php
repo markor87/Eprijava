@@ -28,7 +28,7 @@ class SuspiciousLoginAlert extends Notification implements ShouldQueue
 
         return match ($this->type) {
             'foreign_country' => (new MailMessage)
-                ->subject('Упозорење: пријава са стране земље')
+                ->subject('Упозорење: пријава из стране земље')
                 ->greeting('Откривена сумњива активност')
                 ->line('Корисник **' . $ctx['email'] . '** пријавио се са IP адресе ван Србије.')
                 ->line('**IP адреса:** ' . $ctx['ip'])

@@ -4,7 +4,6 @@ namespace App\Filament\Resources\JobPositions\Tables;
 
 use App\Mail\ApplicationSubmitted;
 use App\Models\Application;
-use App\Models\Competition;
 use App\Models\GovernmentBody;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
@@ -42,16 +41,27 @@ class JobPositionsTable
                     ->searchable()
                     ->sortable(),
             ])
+            ->modifyQueryUsing(fn($query) => $query->with('competition'))
             ->filters([])
             ->recordActions([
                 Action::make('apply')
                     ->label('Пријави се')
+                    ->hidden(fn($record) => !$record->competition?->isActive())
                     ->requiresConfirmation()
                     ->modalHeading('Потврда пријаве')
                     ->modalDescription(fn($record) => 'Да ли желите да поднесете пријаву за радно место: ' . $record->position_name . '?')
                     ->modalSubmitActionLabel('Пријави се')
                     ->action(function ($record) {
                         $user = Auth::user();
+
+                        if (!$record->competition?->isActive()) {
+                            Notification::make()
+                                ->title('Конкурс није активан')
+                                ->body('Пријаве се могу поднети само током трајања конкурса.')
+                                ->warning()
+                                ->send();
+                            return;
+                        }
 
                         $rateLimitKey = 'apply:' . $user->id;
 
@@ -85,7 +95,7 @@ class JobPositionsTable
 
                         $record->loadMissing('rank', 'workLocation');
                         $candidate      = $user->candidate;
-                        $competition    = Competition::find($record->competition_id);
+                        $competition    = $record->competition;
                         $governmentBody = GovernmentBody::find($record->government_body_id);
                         $appCount       = Application::where('job_position_id', $record->id)->count() + 1;
 

@@ -22,6 +22,9 @@ return new class extends Migration
             $table->boolean('success')->default(true);
             $table->string('failure_reason')->nullable();
             $table->timestamp('created_at')->useCurrent();
+
+            $table->index(['user_id', 'success']);
+            $table->index(['email', 'created_at']);
         });
     }
 

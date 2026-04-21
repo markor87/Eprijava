@@ -55,11 +55,12 @@ class LogSuccessfulLogin
         }
 
         if (Setting::get('alert_new_ip', '1') === '1') {
-            $totalLogins = LoginLog::where('user_id', $user->id)->where('success', true)->count();
-            $loginsFromThisIp = LoginLog::where('user_id', $user->id)->where('success', true)->where('ip_address', $ip)->count();
+            $stats = LoginLog::where('user_id', $user->id)->where('success', true)
+                ->selectRaw('COUNT(*) as total, SUM(CASE WHEN ip_address = ? THEN 1 ELSE 0 END) as from_this_ip', [$ip])
+                ->first();
 
-            // User has prior logins (>1 because we just inserted one) and this IP is brand new (count=1)
-            if ($totalLogins > 1 && $loginsFromThisIp === 1) {
+            // total > 1 because we just inserted this login; from_this_ip === 1 means brand new IP
+            if (($stats->total ?? 0) > 1 && ($stats->from_this_ip ?? 0) == 1) {
                 (new AnonymousNotifiable)
                     ->route('mail', $alertEmail)
                     ->notify(new SuspiciousLoginAlert('new_ip', $context));
