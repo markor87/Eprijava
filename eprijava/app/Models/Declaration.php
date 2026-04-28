@@ -23,9 +23,9 @@ class Declaration extends Model
     ];
 
     protected $casts = [
-        'wants_functional_competency_exemption' => 'boolean',
-        'special_conditions_needed'             => 'boolean',
-        'employment_terminated_for_breach'      => 'boolean',
+        'wants_functional_competency_exemption' => 'integer',
+        'special_conditions_needed'             => 'integer',
+        'employment_terminated_for_breach'      => 'integer',
     ];
 
     public function user(): BelongsTo

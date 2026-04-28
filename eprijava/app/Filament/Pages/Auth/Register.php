@@ -5,6 +5,7 @@ namespace App\Filament\Pages\Auth;
 use Filament\Auth\Http\Responses\Contracts\RegistrationResponse;
 use Filament\Auth\Events\Registered;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Auth\Pages\Register as BaseRegister;
 use Filament\Schemas\Schema;
@@ -12,6 +13,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Register extends BaseRegister
 {
+    protected function getEmailFormComponent(): TextInput
+    {
+        return parent::getEmailFormComponent()
+            ->validationMessages([
+                'unique' => 'Ова електронска пошта је већ регистрована.',
+            ]);
+    }
+
     public function form(Schema $schema): Schema
     {
         return $schema->components([

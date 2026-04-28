@@ -106,33 +106,43 @@ class ProfileSeeder extends Seeder
 
         $records = [
             1 => [
-                'institution_name'     => 'Гимназија „Јован Јовановић Змај"',
-                'institution_location' => 'Нови Сад',
-                'duration'             => 4,
-                'direction'            => 'Природно-математички смер',
-                'occupation'           => '',
-                'graduation_year'      => 2003,
+                'school'         => ['name' => 'Гимназија Јован Јовановић Змај', 'city' => 'Нови Сад'],
+                'duration'       => 4,
+                'direction'      => 'Природно-математички смер',
+                'occupation'     => '',
+                'graduation_year'=> 2003,
             ],
             2 => [
-                'institution_name'     => 'Правно-пословна школа',
-                'institution_location' => 'Београд',
-                'duration'             => 4,
-                'direction'            => 'Правно-административни смер',
-                'occupation'           => 'Правно-административни техничар',
-                'graduation_year'      => 2005,
+                'school'         => ['name' => 'Правно-пословна школа Београд', 'city' => 'Београд (Стари Град)'],
+                'duration'       => 4,
+                'direction'      => 'Правно-административни смер',
+                'occupation'     => 'Правно-административни техничар',
+                'graduation_year'=> 2005,
             ],
         ];
 
-        $data = $records[$user->id] ?? [
-            'institution_name'     => 'Гимназија',
-            'institution_location' => 'Београд',
-            'duration'             => 4,
-            'direction'            => 'Друштвено-језички смер',
-            'occupation'           => '',
-            'graduation_year'      => 2004,
+        $entry = $records[$user->id] ?? [
+            'school'         => ['name' => 'Гимназија', 'city' => 'Београд (Стари Град)'],
+            'duration'       => 4,
+            'direction'      => 'Друштвено-језички смер',
+            'occupation'     => '',
+            'graduation_year'=> 2004,
         ];
 
-        HighSchoolEducation::create(array_merge(['user_id' => $user->id], $data));
+        $school = \App\Models\HighSchool::firstOrCreate(
+            ['name' => $entry['school']['name']],
+            ['city' => $entry['school']['city']]
+        );
+
+        HighSchoolEducation::create([
+            'user_id'              => $user->id,
+            'institution_name'     => $school->id,
+            'institution_location' => $school->id,
+            'duration'             => $entry['duration'],
+            'direction'            => $entry['direction'],
+            'occupation'           => $entry['occupation'],
+            'graduation_year'      => $entry['graduation_year'],
+        ]);
     }
 
     // ─── HIGHER EDUCATION ─────────────────────────────────────────────────────

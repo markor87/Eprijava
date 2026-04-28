@@ -56,9 +56,13 @@ class AdminPanelProvider extends PanelProvider
                 : asset('images/suk-logo.png')
             )
             ->brandLogoHeight(fn () => Auth::check() ? '40px' : '120px')
+            ->font('Instrument Sans')
             ->colors([
                 'primary' => Color::Amber,
+                'gray' => Color::Zinc,
             ])
+            ->viteTheme('resources/css/filament/app/theme.css')
+            ->sidebarCollapsibleOnDesktop()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
@@ -88,7 +92,7 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(
                 PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
                 fn () => Auth::check()
-                    ? new HtmlString('<div style="padding: 0 1rem; font-size: 0.75rem; color: #6b7280; white-space: nowrap;">Ваш идентификациони број је: <strong>' . Auth::id() . '</strong></div>')
+                    ? view('filament.components.user-id-badge', ['userId' => Auth::id()])
                     : new HtmlString(''),
             );
     }

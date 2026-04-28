@@ -51,10 +51,11 @@ class DeclarationForm
                 ]),
 
             Section::make('Докази уз пријаву')
+                ->hidden(fn() => RequiredProof::count() === 0)
                 ->schema([
                     Repeater::make('declarationProofs')
                         ->relationship('declarationProofs')
-                        ->label('')
+                        ->hiddenLabel()
                         ->addable(false)
                         ->deletable(false)
                         ->reorderable(false)
@@ -68,7 +69,7 @@ class DeclarationForm
                                 ->label('Доказ')
                                 ->state(fn($get) => RequiredProof::find($get('required_proof_id'))?->proof_description ?? '—'),
                             Placeholder::make('proof_type_info')
-                                ->label('')
+                                ->label('Врста доказа')
                                 ->content(fn($get) => match(RequiredProof::find($get('required_proof_id'))?->proof_type) {
                                     'official_records' => new HtmlString('<span class="text-sm text-primary-500">Овај доказ може да прибави орган из службених евиденција</span>'),
                                     'personal'         => new HtmlString('<span class="text-sm text-warning-500">Овај доказ кандидат лично доставља</span>'),
@@ -108,10 +109,11 @@ class DeclarationForm
                 ]),
 
             Section::make('Добровољна изјава о припадности националној мањини')
+                ->hidden(fn() => NationalMinority::count() === 0)
                 ->schema([
                     Repeater::make('declarationMinorities')
                         ->relationship('declarationMinorities')
-                        ->label('')
+                        ->hiddenLabel()
                         ->addable(false)
                         ->deletable(false)
                         ->reorderable(false)

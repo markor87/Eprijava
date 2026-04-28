@@ -6,6 +6,7 @@ use App\Filament\Resources\ForeignLanguageSkills\Pages\EditForeignLanguageSkill;
 use App\Filament\Resources\ForeignLanguageSkills\Pages\ListForeignLanguageSkills;
 use App\Filament\Resources\ForeignLanguageSkills\Schemas\ForeignLanguageSkillForm;
 use App\Filament\Resources\ForeignLanguageSkills\Tables\ForeignLanguageSkillsTable;
+use App\Models\ForeignLanguage;
 use App\Models\ForeignLanguageSkillSet;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -44,10 +45,17 @@ class ForeignLanguageSkillResource extends Resource
         return ForeignLanguageSkillsTable::configure($table);
     }
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return parent::shouldRegisterNavigation() && ForeignLanguage::exists();
+    }
+
     public static function canAccess(): bool
     {
         $user = Auth::user();
-        return $user && ($user->hasRole('super_admin') || $user->can('ViewAny:ForeignLanguageSkillSet'));
+        return $user
+            && ($user->hasRole('super_admin') || $user->can('ViewAny:ForeignLanguageSkillSet'))
+            && ForeignLanguage::exists();
     }
 
     public static function getEloquentQuery(): Builder

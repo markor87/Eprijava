@@ -4,7 +4,11 @@ namespace App\Filament\Resources\JobPositions\Tables;
 
 use App\Mail\ApplicationSubmitted;
 use App\Models\Application;
+use App\Models\ExamType;
+use App\Models\ForeignLanguage;
 use App\Models\GovernmentBody;
+use App\Models\RequiredProof;
+use App\Models\TrainingSet;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -94,7 +98,44 @@ class JobPositionsTable
                         }
 
                         $record->loadMissing('rank', 'workLocation');
-                        $candidate      = $user->candidate;
+                        $candidate = $user->candidate;
+
+                        $missing = [];
+
+                        if (!$candidate?->first_name || !$candidate?->last_name || !$candidate?->national_id) {
+                            $missing[] = 'лични подаци';
+                        }
+                        if (!$user->highSchoolEducations()->exists()) {
+                            $missing[] = 'средња школа';
+                        }
+                        if (in_array($record->qualification_level, ['ВСС', 'ВШС']) && !$user->higherEducations()->exists()) {
+                            $missing[] = 'виша/висока школа';
+                        }
+                        if (!$user->computerSkill()->exists()) {
+                            $missing[] = 'рад на рачунару';
+                        }
+                        if (!$user->vacancySource()->exists()) {
+                            $missing[] = 'сазнавање о конкурсу';
+                        }
+                        if (ExamType::exists() && !TrainingSet::where('user_id', $user->id)->whereHas('trainings')->exists()) {
+                            $missing[] = 'стручни испити и други испити';
+                        }
+                        if (ForeignLanguage::exists() && !$user->foreignLanguageSkillSet()->exists()) {
+                            $missing[] = 'страни језици';
+                        }
+                        if (RequiredProof::exists() && !$user->declaration()->exists()) {
+                            $missing[] = 'изјава';
+                        }
+
+                        if (!empty($missing)) {
+                            Notification::make()
+                                ->title('Профил није попуњен')
+                                ->body('Молимо вас да попуните следеће секције пре подношења пријаве: ' . implode(', ', $missing) . '.')
+                                ->danger()
+                                ->send();
+                            return;
+                        }
+
                         $competition    = $record->competition;
                         $governmentBody = GovernmentBody::find($record->government_body_id);
                         $appCount       = Application::where('job_position_id', $record->id)->count() + 1;
