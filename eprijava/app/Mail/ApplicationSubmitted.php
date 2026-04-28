@@ -31,7 +31,7 @@ class ApplicationSubmitted extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.application-submitted',
+            markdown: 'emails.application-submitted',
         );
     }
 }
