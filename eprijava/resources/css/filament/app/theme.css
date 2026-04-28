@@ -1,0 +1,24 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+/* Elevated card sections */
+.fi-section {
+    box-shadow: 0 1px 4px 0 rgb(0 0 0 / 0.07), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+}
+
+/* Refined sidebar right border */
+.fi-sidebar {
+    border-right-width: 1px;
+}
+
+/* Tighter sidebar navigation item padding */
+.fi-sidebar-nav-groups {
+    padding-inline: 0.75rem;
+}
+
+/* Slightly taller table header cells for breathing room */
+.fi-ta-header-cell {
+    padding-block: 0.625rem;
+}
