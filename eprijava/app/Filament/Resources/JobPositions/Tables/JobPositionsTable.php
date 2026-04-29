@@ -17,6 +17,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 
@@ -139,32 +140,39 @@ class JobPositionsTable
 
                         $competition    = $record->competition;
                         $governmentBody = GovernmentBody::find($record->government_body_id);
-                        $appCount       = Application::where('job_position_id', $record->id)->count() + 1;
 
-                        $candidateCode =
-                            ($governmentBody?->government_body_code ?? '') .
-                            mb_substr($competition?->tip_konkursa ?? '', 0, 1) .
-                            ($competition?->datum_od?->format('dmy') ?? '') .
-                            ($record->sequence_number ?? '') .
-                            'И' .
-                            mb_substr($record->employment_type ?? '', 0, 1) .
-                            'Е' .
-                            $appCount;
+                        RateLimiter::hit($rateLimitKey, 30);
 
                         try {
-                            Application::create([
-                                'user_id'            => $user->id,
-                                'competition_id'     => $record->competition_id,
-                                'government_body_id' => $record->government_body_id,
-                                'job_position_id'    => $record->id,
-                                'first_name'         => $candidate?->first_name,
-                                'last_name'          => $candidate?->last_name,
-                                'national_id'        => $candidate?->national_id,
-                                'candidate_code'     => $candidateCode,
-                                'org_unit_path'      => $record->org_unit_path,
-                                'rank_name'          => $record->rank?->name,
-                                'profile_snapshot'   => Application::buildProfileSnapshot($user),
-                            ]);
+                            DB::transaction(function () use ($record, $user, $candidate, $competition, $governmentBody) {
+                                $appCount = Application::where('job_position_id', $record->id)
+                                    ->lockForUpdate()
+                                    ->count() + 1;
+
+                                $candidateCode =
+                                    ($governmentBody?->government_body_code ?? '') .
+                                    mb_substr($competition?->tip_konkursa ?? '', 0, 1) .
+                                    ($competition?->datum_od?->format('dmy') ?? '') .
+                                    ($record->sequence_number ?? '') .
+                                    'И' .
+                                    mb_substr($record->employment_type ?? '', 0, 1) .
+                                    'Е' .
+                                    $appCount;
+
+                                Application::create([
+                                    'user_id'            => $user->id,
+                                    'competition_id'     => $record->competition_id,
+                                    'government_body_id' => $record->government_body_id,
+                                    'job_position_id'    => $record->id,
+                                    'first_name'         => $candidate?->first_name,
+                                    'last_name'          => $candidate?->last_name,
+                                    'national_id'        => $candidate?->national_id,
+                                    'candidate_code'     => $candidateCode,
+                                    'org_unit_path'      => $record->org_unit_path,
+                                    'rank_name'          => $record->rank?->name,
+                                    'profile_snapshot'   => Application::buildProfileSnapshot($user),
+                                ]);
+                            });
                         } catch (QueryException) {
                             Notification::make()
                                 ->title('Већ сте пријављени')
@@ -173,8 +181,6 @@ class JobPositionsTable
                                 ->send();
                             return;
                         }
-
-                        RateLimiter::hit($rateLimitKey, 30);
 
                         $application = Application::where('user_id', $user->id)
                             ->where('job_position_id', $record->id)

@@ -182,7 +182,7 @@ class Certificates extends Page implements HasTable
     private function downloadAllForeignLang(): mixed
     {
         $entries = [];
-        foreach (Application::all() as $app) {
+        foreach (Application::cursor() as $app) {
             $files = $this->getForeignLangFiles($app);
             if (empty($files)) continue;
             $base = $this->baseName($app);
@@ -198,7 +198,7 @@ class Certificates extends Page implements HasTable
     private function downloadAllComputer(): mixed
     {
         $entries = [];
-        foreach (Application::all() as $app) {
+        foreach (Application::cursor() as $app) {
             $snap = $app->profile_snapshot['computerSkill'] ?? [];
             $base = $this->baseName($app);
             foreach (array_filter([
