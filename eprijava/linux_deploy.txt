@@ -74,6 +74,8 @@
     SESSION_DRIVER=file     # или database/redis ако постоји
     CACHE_STORE=file        # или database/redis ако постоји
 
+    QUEUE_CONNECTION=database   # обавезно — е-маил потврде пријаве и безбедносни аларми иду кроз ред
+
 
 5. ИНСТАЛАЦИЈА И ПОКРЕТАЊЕ
 ---------------------------
@@ -149,8 +151,8 @@ Certbot ће сам допунити nginx конфигурацију.
 
 а) Додај у .env:
 
-    QUEUE_CONNECTION=database
     SECURITY_ALERT_EMAIL=admin@твоj-домен.rs
+    # QUEUE_CONNECTION=database је већ наведено у секцији 4
 
 б) TRUSTED PROXIES — обавезно ако је апликација иза nginx/Apache!
    Без овога request()->ip() враћа 127.0.0.1 уместо стварне IP адресе
@@ -166,8 +168,9 @@ Certbot ће сам допунити nginx конфигурацију.
 
        APP_TRUSTED_PROXIES=*
 
-в) QUEUE WORKER — потребан да би е-маил аларми стварно стигли.
-   Без покренутог воркера послови чекају у табели jobs и никад се не извршавају.
+в) QUEUE WORKER — обавезан! Без покренутог воркера е-маил потврда приликом
+   подношења пријаве и безбедносни е-маил аларми никад се не шаљу —
+   послови чекају у табели jobs и никад се не извршавају.
 
    Инсталирај Supervisor:
        sudo apt install supervisor

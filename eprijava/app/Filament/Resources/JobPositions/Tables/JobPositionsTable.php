@@ -15,6 +15,7 @@ use Filament\Actions\EditAction;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
@@ -150,19 +151,28 @@ class JobPositionsTable
                             'Е' .
                             $appCount;
 
-                        Application::create([
-                            'user_id'            => $user->id,
-                            'competition_id'     => $record->competition_id,
-                            'government_body_id' => $record->government_body_id,
-                            'job_position_id'    => $record->id,
-                            'first_name'         => $candidate?->first_name,
-                            'last_name'          => $candidate?->last_name,
-                            'national_id'        => $candidate?->national_id,
-                            'candidate_code'     => $candidateCode,
-                            'org_unit_path'      => $record->org_unit_path,
-                            'rank_name'          => $record->rank?->name,
-                            'profile_snapshot'   => Application::buildProfileSnapshot($user),
-                        ]);
+                        try {
+                            Application::create([
+                                'user_id'            => $user->id,
+                                'competition_id'     => $record->competition_id,
+                                'government_body_id' => $record->government_body_id,
+                                'job_position_id'    => $record->id,
+                                'first_name'         => $candidate?->first_name,
+                                'last_name'          => $candidate?->last_name,
+                                'national_id'        => $candidate?->national_id,
+                                'candidate_code'     => $candidateCode,
+                                'org_unit_path'      => $record->org_unit_path,
+                                'rank_name'          => $record->rank?->name,
+                                'profile_snapshot'   => Application::buildProfileSnapshot($user),
+                            ]);
+                        } catch (QueryException) {
+                            Notification::make()
+                                ->title('Већ сте пријављени')
+                                ->body('Пријава за ово радно место је већ поднета.')
+                                ->warning()
+                                ->send();
+                            return;
+                        }
 
                         RateLimiter::hit($rateLimitKey, 30);
 

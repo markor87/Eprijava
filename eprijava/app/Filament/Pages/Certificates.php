@@ -35,6 +35,11 @@ class Certificates extends Page implements HasTable
         return 'Сертификати';
     }
 
+    public function getTitle(): string
+    {
+        return 'Сертификати';
+    }
+
     public function table(Table $table): Table
     {
         return $table

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attachment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,12 +12,18 @@ class PrivateFileController extends Controller
     {
         $user = $request->user();
 
-        // Extract user ID from path (second segment: e.g. certificate-attachments/3/file.pdf)
-        $segments = explode('/', $path);
-        $ownerIdFromPath = isset($segments[1]) ? (int) $segments[1] : null;
+        if (str_contains($path, '..')) {
+            abort(403);
+        }
+
+        $attachment = Attachment::where('path', $path)->first();
+
+        if (!$attachment) {
+            abort(404);
+        }
 
         $isSuperAdmin = $user->hasRole('super_admin');
-        $isOwner = $ownerIdFromPath && $ownerIdFromPath === $user->id;
+        $isOwner      = $attachment->user_id === $user->id;
 
         if (!$isSuperAdmin && !$isOwner) {
             abort(403);

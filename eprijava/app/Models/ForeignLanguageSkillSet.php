@@ -14,6 +14,20 @@ class ForeignLanguageSkillSet extends Model
         'certificate_attachment' => 'array',
     ];
 
+    protected static function booted(): void
+    {
+        static::saved(function ($model) {
+            foreach ($model->certificate_attachment ?? [] as $path) {
+                if ($path) {
+                    Attachment::firstOrCreate(
+                        ['path'    => $path],
+                        ['user_id' => $model->user_id],
+                    );
+                }
+            }
+        });
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

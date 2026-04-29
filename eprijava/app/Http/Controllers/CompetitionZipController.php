@@ -69,6 +69,7 @@ class CompetitionZipController extends Controller
                 ])) . '.pdf';
 
                 $zip->addFromString($filename, $pdf->output());
+                unset($pdf);
                 $current++;
                 $this->sse(['current' => $current, 'total' => $total]);
             }

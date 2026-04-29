@@ -57,8 +57,8 @@ class ApplicationResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $user = Auth::user();
-        $query = parent::getEloquentQuery();
+        $user  = Auth::user();
+        $query = parent::getEloquentQuery()->with(['governmentBody', 'jobPosition']);
 
         if ($user && $user->hasRole('super_admin')) {
             return $query;

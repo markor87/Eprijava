@@ -26,13 +26,27 @@ class ComputerSkill extends Model
     ];
 
     protected $casts = [
-        'word_has_certificate'        => 'boolean',
-        'excel_has_certificate'       => 'boolean',
-        'internet_has_certificate'    => 'boolean',
-        'word_exemption_requested'    => 'boolean',
-        'excel_exemption_requested'   => 'boolean',
+        'word_has_certificate'         => 'boolean',
+        'excel_has_certificate'        => 'boolean',
+        'internet_has_certificate'     => 'boolean',
+        'word_exemption_requested'     => 'boolean',
+        'excel_exemption_requested'    => 'boolean',
         'internet_exemption_requested' => 'boolean',
     ];
+
+    protected static function booted(): void
+    {
+        static::saved(function ($model) {
+            foreach (['word_certificate_attachment', 'excel_certificate_attachment', 'internet_certificate_attachment'] as $field) {
+                if ($model->$field) {
+                    Attachment::firstOrCreate(
+                        ['path'    => $model->$field],
+                        ['user_id' => $model->user_id],
+                    );
+                }
+            }
+        });
+    }
 
     public function user(): BelongsTo
     {
