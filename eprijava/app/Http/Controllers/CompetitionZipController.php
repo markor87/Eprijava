@@ -91,8 +91,8 @@ class CompetitionZipController extends Controller
             $date      = $competition->datum_od?->format('d.m.Y.') ?? 'datum';
             $zipName   = "prijave_{$organName}_{$date}.zip";
 
-            Cache::put("zip_token_{$token}", ['path' => $dest, 'filename' => $zipName], 3600);
-            Cache::put("zip_ready_{$competition->id}", ['token' => $token, 'filename' => $zipName], 3600);
+            Cache::put("zip_token_{$token}", ['path' => $dest, 'filename' => $zipName], 86400);
+            Cache::put("zip_ready_{$competition->id}", ['token' => $token, 'filename' => $zipName], 86400);
 
             $this->sse(['done' => true, 'token' => $token, 'filename' => $zipName]);
 

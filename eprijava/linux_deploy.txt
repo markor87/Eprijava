@@ -16,10 +16,20 @@
             try_files $uri $uri/ /index.php?$query_string;
         }
 
+        # Засебан блок за SSE руту — мора бити ИЗНАД општег location ~ \.php$ блока
+        # fastcgi_buffering off спречава буферисање и ERR_HTTP2_PROTOCOL_ERROR
+        location /generate-competition-zip {
+            include snippets/fastcgi-php.conf;
+            fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+            fastcgi_read_timeout 7200;
+            fastcgi_buffering off;
+            fastcgi_request_buffering off;
+        }
+
         location ~ \.php$ {
             include snippets/fastcgi-php.conf;
             fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
-            fastcgi_read_timeout 3600;   # важно за SSE (Преузимање пријава)
+            fastcgi_read_timeout 3600;
         }
 
         location ~ /\.ht {
@@ -106,11 +116,10 @@ Certbot ће сам допунити nginx конфигурацију.
 
 8. ТЕСТИРАЊЕ SSE (Преузимање пријава)
 --------------------------------------
-После деплоја, кликни Преузми пријаве и провери да ли бројач расте.
-Ако прогрес бар стоји на 0 а касније одједном скочи на 100%, nginx
-буферише одговор упркос X-Accel-Buffering: no хедеру.
-Решење — додај у location ~ \.php$ блок:
-    fastcgi_buffering off;
+После деплоја, кликни Преузми пријаве и провери да ли бројач расте у реалном
+времену. Ако бројач стоји на 0 па одједном скочи на 100%, или ако добијаш
+ERR_HTTP2_PROTOCOL_ERROR у конзоли — провери да ли је location блок за
+/generate-competition-zip из секције 1 исправно додат и да ли је nginx рестартован.
 
 
 9. APACHE2 (алтернатива уместо nginx)
@@ -132,9 +141,8 @@ Certbot ће сам допунити nginx конфигурацију.
 г) Ако користиш mod_php уместо FPM, set_time_limit(0) у PHP коду је довољан —
    нема посебне FPM конфигурације.
 
-д) Ако је укључен mod_http2 и добијаш ERR_HTTP2_PROTOCOL_ERROR у конзоли
-   (хармлесна грешка — преузимање свеједно ради), можеш онемогућити HTTP/2
-   само за SSE руту:
+д) Ако је укључен mod_http2 и добијаш ERR_HTTP2_PROTOCOL_ERROR у конзоли,
+   онемогући HTTP/2 само за SSE руту:
 
     <Location /generate-competition-zip>
         Protocols http/1.1
@@ -164,7 +172,7 @@ Certbot ће сам допунити nginx конфигурацију.
            $middleware->trustProxies(at: '*');
        })
 
-   Или постави у .env (ако верзија Laravela подржава):
+   Или постави у .env (ако верзија Laravела подржава):
 
        APP_TRUSTED_PROXIES=*
 
@@ -201,3 +209,18 @@ Certbot ће сам допунити nginx конфигурацију.
    Табела jobs се прави аутоматски ако не постоји:
        php artisan queue:table
        php artisan migrate --force
+
+
+11. SCHEDULER (аутоматско брисање ZIP фајлова)
+-----------------------------------------------
+Апликација чува ZIP архиве у storage/app/downloads/ и брише их после успешног
+преузимања. Scheduler команда чисти евентуалне заостале фајлове старије од 24 сата.
+
+Додај у crontab (sudo crontab -e -u www-data):
+
+    * * * * * cd /var/www/eprijava && php artisan schedule:run >> /dev/null 2>&1
+
+Scheduler покреће cleanup сваки дан у 03:00.
+
+Провера:
+    php artisan schedule:list
