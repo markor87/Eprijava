@@ -33,7 +33,7 @@ class CompetitionsTable
                 TextColumn::make('status')
                     ->label('Статус')
                     ->badge()
-                    ->state(fn ($record) => now()->between($record->datum_od, $record->datum_do) ? 'Активан' : 'Неактиван')
+                    ->state(fn ($record) => now()->between($record->datum_od->startOfDay(), $record->datum_do->endOfDay()) ? 'Активан' : 'Неактиван')
                     ->color(fn ($state) => $state === 'Активан' ? 'success' : 'danger'),
             ])
             ->filters([])

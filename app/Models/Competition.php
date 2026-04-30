@@ -33,7 +33,7 @@ class Competition extends Model
 
     public function isActive(): bool
     {
-        return now()->between($this->datum_od, $this->datum_do);
+        return now()->between($this->datum_od->startOfDay(), $this->datum_do->endOfDay());
     }
 
     public function jobPositions(): HasMany
