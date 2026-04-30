@@ -1,0 +1,63 @@
+$isAdmin = false;
+$adminGroups = array("organ");
+if(Security::isAdmin() || in_array(Security::getUserGroup(), $adminGroups)) {
+    $isAdmin = true;
+}
+// Primeni filter samo ako korisnik nije admin
+if(!$isAdmin) {
+    // Postojeći filter za konkurse
+    if(!empty($strWhereClause)) {
+        $strWhereClause .= " AND (konkurs_id IS NULL OR konkurs_id IN (
+            SELECT id FROM konkurs 
+            WHERE datum_od <= CURDATE() 
+            AND datum_do >= CURDATE()
+        ))";
+    } else {
+        $strWhereClause = " (konkurs_id IS NULL OR konkurs_id IN (
+            SELECT id FROM konkurs 
+            WHERE datum_od <= CURDATE() 
+            AND datum_do >= CURDATE()
+        ))";
+    }
+    
+    // Novi filter za stručnu spremu
+    // Dobijamo ID trenutno ulogovanog korisnika iz sesije
+    $currentUserId = $_SESSION["id"] ?? 0;
+    
+    if($currentUserId > 0) {
+        $strWhereClause .= " AND (strucna_sprema <= (
+            SELECT COALESCE(SUM(sos.obim_studija), 0) 
+            FROM visoko_obrazovanje vo
+            LEFT JOIN sifarnik_obim_studija sos ON vo.obim_studija = sos.id
+            WHERE vo.user_id = " . intval($currentUserId) . "
+            AND vo.ima_visoko_obrazovanje = 'Да'
+        ))";
+        
+        // Izmenjeni deo - svi vide pozicije sa strucna_sprema = 0 + dodatne provere za ostale
+        $strWhereClause .= " AND (
+            -- Svi korisnici mogu videti pozicije sa strucna_sprema = 0
+            radna_mesta.strucna_sprema = 0
+            OR
+            -- Za ostale pozicije (strucna_sprema > 0), primeni provere obrazovanja
+            (
+                radna_mesta.strucna_sprema > 0 
+                AND EXISTS (
+                    SELECT 1 
+                    FROM visoko_obrazovanje vo
+                    INNER JOIN sifarnik_polja_oblasti_zvanje spoz ON vo.zvanje = spoz.id
+                    WHERE vo.user_id = " . intval($currentUserId) . "
+                    AND vo.ima_visoko_obrazovanje = 'Да'
+                    AND (
+                        (
+                            (radna_mesta.obrazovno_naucna_oblast IS NULL OR radna_mesta.obrazovno_naucna_oblast = '' OR
+                             radna_mesta.obrazovno_naucna_oblast LIKE CONCAT('%', spoz.obrazovno_naucna_polja, '%'))
+                            AND 
+                            (radna_mesta.naucno_strucna_oblast IS NULL OR radna_mesta.naucno_strucna_oblast = '' OR
+                             radna_mesta.naucno_strucna_oblast LIKE CONCAT('%', spoz.naucno_strucne_oblasti, '%'))
+                        )
+                    )
+                )
+            )
+        )";
+    }
+}
